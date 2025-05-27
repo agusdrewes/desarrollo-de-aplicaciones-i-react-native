@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/RegisterStyle';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Register() {
   const navigation = useNavigation();
+  const { register } = useContext(AuthContext);
 
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
@@ -14,38 +16,42 @@ export default function Register() {
 
   const [errors, setErrors] = useState({});
 
-  const validateFields = () => {
-    const newErrors = {};
+    const validateFields = () => {
+        const newErrors = {};
 
-    if (!nombre.trim()) newErrors.nombre = 'El nombre no puede estar vacío';
-    if (!apellido.trim()) newErrors.apellido = 'El apellido no puede estar vacío';
-    if (!email.trim()) {
-      newErrors.email = 'El email no puede estar vacío';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Formato de email inválido';
-    }
-    if (!password) {
-      newErrors.password = 'La contraseña no puede estar vacía';
-    } else if (password.length < 6) {
-      newErrors.password = 'Debe tener al menos 6 caracteres';
-    }
-    if (!confirmPassword) {
-      newErrors.confirmPassword = 'Confirma tu contraseña';
-    } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
-    }
+        if (!nombre.trim()) newErrors.nombre = 'El nombre no puede estar vacío';
+        if (!apellido.trim()) newErrors.apellido = 'El apellido no puede estar vacío';
+        if (!email.trim()) {
+            newErrors.email = 'El email no puede estar vacío';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            newErrors.email = 'Formato de email inválido';
+        }
+        if (!password) {
+            newErrors.password = 'La contraseña no puede estar vacía';
+        } else if (password.length < 6) {
+            newErrors.password = 'Debe tener al menos 6 caracteres';
+        }
+        if (!confirmPassword) {
+            newErrors.confirmPassword = 'Confirma tu contraseña';
+        } else if (password !== confirmPassword) {
+            newErrors.confirmPassword = 'Las contraseñas no coinciden';
+        }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
-  const handleRegister = () => {
-    if (validateFields()) {
-      // Simular registro
-      Alert.alert('Registro exitoso', 'Te enviamos un correo para validar tu cuenta.');
-      navigation.navigate('Login');
-    }
-  };
+    const handleRegister = async () => {
+        if (validateFields()) {
+            try {
+                await register(email, `${nombre} ${apellido}`, password, confirmPassword);
+                Alert.alert('Éxito', 'Revisa tu email para confirmar el registro');
+                navigation.navigate('Login');
+            } catch (error) {
+                Alert.alert('Error', error.response?.data?.message || 'No se pudo registrar');
+            }
+        }
+    };
 
   return (
     <View style={styles.container}>
@@ -76,7 +82,7 @@ export default function Register() {
           <Text style={styles.buttonText}>Cancelar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.button, !validateFields() && styles.disabledButton]} onPress={handleRegister} disabled={!validateFields()}>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
       </View>
