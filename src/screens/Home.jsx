@@ -1,11 +1,23 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Text, Button } from 'react-native-paper';
 
 export default Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to DeRemate App!</Text>
+      <Text variant="titleLarge" style={styles.title}>
+        Welcome to DeRemate App!
+      </Text>
       <View style={styles.buttonContainer}>
-        <Button title="Go to Login Screen" onPress={() => navigation.navigate('Login')} />
+        <Button mode="contained" onPress={() => navigation.navigate('Login')} style={styles.button}>
+          Go to Login Screen
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate('ConfirmSignup')}
+          style={styles.button}
+        >
+          Go to Confirm Signup Screen
+        </Button>
         <View style={styles.buttonSpacer} />
       </View>
     </View>
@@ -22,10 +34,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 20,
   },
-  buttonContainer: {
-    width: '80%',
-  },
-  buttonSpacer: {
-    height: 20,
+  button: {
+    marginTop: 8,
+    paddingVertical: 6,
   },
 });

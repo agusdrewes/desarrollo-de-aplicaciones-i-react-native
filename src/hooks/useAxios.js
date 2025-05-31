@@ -7,12 +7,12 @@ import { useNavigation } from '@react-navigation/native';
 export const useAxios = () => {
   const { logout } = useContext(AuthContext);
   const navigation = useNavigation();
-  const axiosInstance = useRef(axios.create({ baseURL: 'https://api.com' }));
+  const axiosInstance = useRef(axios.create({ baseURL: 'http://10.0.2.2:3000' }));
 
   useEffect(() => {
     const instance = axiosInstance.current;
 
-    instance.interceptors.request.use(async (config) => {
+    instance.interceptors.request.use(async config => {
       const token = await getToken();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -21,11 +21,12 @@ export const useAxios = () => {
     });
 
     instance.interceptors.response.use(
-      (res) => res,
-      async (err) => {
+      res => res,
+      async err => {
         if (err.response?.status === 401) {
-          await logout();              // Actualiza estado global
-          navigation.reset({           // Borra historial y navega al login
+          await logout(); // Actualiza estado global
+          navigation.reset({
+            // Borra historial y navega al login
             index: 0,
             routes: [{ name: 'Login' }],
           });
