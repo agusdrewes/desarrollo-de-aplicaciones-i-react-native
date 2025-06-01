@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { useAuthService } from '../services/AuthServices';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/RegisterStyle';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Register() {
   const navigation = useNavigation();
-  const { register } = useContext(AuthContext);
+  const { register } = useAuthService();
 
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');

@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import { getToken, saveToken, removeToken } from '../utils/tokenStorage';
-import axios from 'axios';
+import { getToken, removeToken, saveToken } from '../utils/tokenStorage';
 
 export const AuthContext = createContext();
 
@@ -15,26 +14,10 @@ export const AuthProvider = ({ children }) => {
     init();
   }, []);
 
-  const login = async (email, password) => {
-    try {
-      const response = await axios.post('http://192.168.100.11:3000/auth/signin', { email, password });
-      const token = response.data.accessToken;
-      await saveToken(token);
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error('Error en login:', error.response?.data || error.message);
-      throw error;
-    }
-  };
-
-  const register = async (email, fullName, password, passwordConfirmation) => {
-    try {
-      await axios.post('http://192.168.100.11:3000/auth/signup', { email, fullName, password, passwordConfirmation });
-    } catch (error) {
-      console.error('Error en registro:', error.response?.data || error.message);
-      throw error;
-    }
-  };
+  const login = async (token) => {
+    await saveToken(token);
+    setIsAuthenticated(true);
+  }
 
   const logout = async () => {
     await removeToken();
@@ -42,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, register }}>
+    <AuthContext.Provider value={{ isAuthenticated, logout, login }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/LoginStyle';
+import { useAuthService } from '../services/AuthServices';
 
 export default function Login() {
-  const { login } = useContext(AuthContext);
   const navigation = useNavigation();
+  const { login } = useAuthService();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
