@@ -1,6 +1,9 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Routes from '../screens/Routes';
+import HistoryScreen from '../screens/HistoryScreen';
+import Logout from '../screens/Logout';
 
 import Home from '../screens/Home';
 
@@ -22,6 +25,13 @@ const AppNavigator = () => (
       component={HistoryScreen}
       options={{
         tabBarLabel: 'Historial',
+      }}
+    />
+    <Tab.Screen
+      name="Logout"
+      component={Logout}
+      options={{
+        tabBarLabel: 'Salir',
       }}
     />
   </Tab.Navigator>
