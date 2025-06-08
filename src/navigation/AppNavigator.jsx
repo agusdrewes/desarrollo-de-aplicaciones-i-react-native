@@ -32,8 +32,7 @@ const DeliveriesStack = () => (
       name="DeliveriesList"
       component={DeliveryHistory}
       options={{ 
-        headerShown: false,
-        title: 'Historial de Entregas'
+        headerShown: false
       }}
     />
     <Stack.Screen
@@ -83,6 +82,7 @@ const Tabs = () => (
       name="Historial"
       component={DeliveriesStack}
       options={{
+        headerShown: false,
         tabBarLabel: 'Historial',
         tabBarIcon: ({ color, size }) => <MaterialIcons name="history" size={size} color={color} />,
       }}
