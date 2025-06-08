@@ -6,6 +6,8 @@ const OtpInput = ({ value = '', onChange }) => {
   const inputs = useRef([]);
   const handleChange = (text, idx) => {
     const otpArray = value.split('');
+    // Only allow numeric input - reject if no numbers found
+    const numericText = text.replace(/[^0-9]/g, '');
 
     // If text is empty (backspace/delete was pressed)
     if (!text) {
@@ -16,15 +18,10 @@ const OtpInput = ({ value = '', onChange }) => {
         inputs.current[idx - 1].focus();
       }
     } else {
-      // Only allow numeric input - reject if no numbers found
-      const numericText = text.replace(/[^0-9]/g, '');
       if (!numericText) {
         // If no numeric characters found, don't update anything
         return;
       }
-
-      // Take only the last digit
-      otpArray[idx] = numericText.slice(0, 1);
     }
 
     otpArray[idx] = text.replace(/[^0-9]/g, '').slice(0, 1);
