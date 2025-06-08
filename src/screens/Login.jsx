@@ -21,9 +21,16 @@ export default function Login() {
     }
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!emailError && email && password) {
-      login(email, password);
+      try {
+        await login(email, password);
+      } catch (error) {
+        Alert.alert(
+          'Error',
+          error.response?.data?.message || 'No se pudo iniciar sesión. Intente nuevamente.'
+        );
+      }
     } else {
       Alert.alert('Error', 'Por favor, completa los campos correctamente.');
     }
@@ -44,7 +51,7 @@ export default function Login() {
         style={styles.input}
         placeholder="Email"
         value={email}
-        onChangeText={(text) => {
+        onChangeText={text => {
           setEmail(text);
           validateEmail(text);
         }}
