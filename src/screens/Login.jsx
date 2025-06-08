@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/LoginStyle';
 import { useAuthService } from '../services/AuthServices';
+import isEmailValid from '../utils/isEmailValid'
 
 export default function Login() {
   const navigation = useNavigation();
@@ -12,9 +13,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
 
-  const validateEmail = value => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value)) {
+  const validateEmail = (value) => {
+    if (!isEmailValid(value)) {
       setEmailError('Formato de email inválido');
     } else {
       setEmailError('');
@@ -39,6 +39,11 @@ export default function Login() {
   const isFormValid = email && password && !emailError;
 
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
 
@@ -79,5 +84,7 @@ export default function Login() {
         <Text style={styles.linkText}>Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
     </View>
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

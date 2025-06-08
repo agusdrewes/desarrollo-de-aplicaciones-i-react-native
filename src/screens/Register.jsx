@@ -3,6 +3,7 @@ import { useAuthService } from '../services/AuthServices';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/RegisterStyle';
 import { useNavigation } from '@react-navigation/native';
+import isEmailValid from '../utils/isEmailValid'
 
 export default function Register() {
   const navigation = useNavigation();
@@ -22,23 +23,23 @@ export default function Register() {
   const validateFields = () => {
     const newErrors = {};
 
-    if (!nombre.trim()) newErrors.nombre = 'El nombre no puede estar vacío';
-    if (!apellido.trim()) newErrors.apellido = 'El apellido no puede estar vacío';
-    if (!email.trim()) {
-      newErrors.email = 'El email no puede estar vacío';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Formato de email inválido';
-    }
-    if (!password) {
-      newErrors.password = 'La contraseña no puede estar vacía';
-    } else if (password.length < 6) {
-      newErrors.password = 'Debe tener al menos 6 caracteres';
-    }
-    if (!confirmPassword) {
-      newErrors.confirmPassword = 'Confirma tu contraseña';
-    } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
-    }
+        if (!nombre.trim()) newErrors.nombre = 'El nombre no puede estar vacío';
+        if (!apellido.trim()) newErrors.apellido = 'El apellido no puede estar vacío';
+        if (!email.trim()) {
+            newErrors.email = 'El email no puede estar vacío';
+        } else if (!isEmailValid(email)) {
+            newErrors.email = 'Formato de email inválido';
+        }
+        if (!password) {
+            newErrors.password = 'La contraseña no puede estar vacía';
+        } else if (password.length < 6) {
+            newErrors.password = 'Debe tener al menos 6 caracteres';
+        }
+        if (!confirmPassword) {
+            newErrors.confirmPassword = 'Confirma tu contraseña';
+        } else if (password !== confirmPassword) {
+            newErrors.confirmPassword = 'Las contraseñas no coinciden';
+        }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
