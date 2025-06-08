@@ -7,8 +7,8 @@ export default function ConfirmSignup({ navigation }) {
   const [otp, setOtp] = useState('');
   const { confirmSignup, getErrorMessage } = useAuthService();
 
-  const navigateToHome = () => {
-    navigation.navigate('Home');
+  const navigateToLogin = () => {
+    navigation.navigate('Login');
   };
 
   const handleVerify = async () => {
@@ -22,7 +22,7 @@ export default function ConfirmSignup({ navigation }) {
         [
           {
             text: 'OK',
-            onPress: navigateToHome,
+            onPress: navigateToLogin,
           },
         ]
       );
@@ -38,7 +38,7 @@ export default function ConfirmSignup({ navigation }) {
           },
           {
             text: 'Cancelar',
-            onPress: navigateToHome,
+            onPress: navigateToLogin,
             style: 'cancel',
           },
         ]
@@ -52,7 +52,7 @@ export default function ConfirmSignup({ navigation }) {
         titleText="Ingresá el código que te enviamos a tu email para confirmar el registro"
         acceptButtonText="Verificar"
         cancelButtonText="Cancelar"
-        onCancel={navigateToHome}
+        onCancel={navigateToLogin}
         onAccept={handleVerify}
         onChange={setOtp}
         value={otp}

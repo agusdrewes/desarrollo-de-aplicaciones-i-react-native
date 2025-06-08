@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ActivityIndicator, Snackbar } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { useRouteServices } from '../services/RouteServices';
+import { useRouteService } from '../services/routeService';
 
 export default function Routes() {
   const [routes, setRoutes] = useState([]);
@@ -11,7 +11,7 @@ export default function Routes() {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
-  const { getRoutes } = useRouteServices();
+  const { getRoutes } = useRouteService();
 
   useEffect(() => {
     const fetchRoutes = async () => {

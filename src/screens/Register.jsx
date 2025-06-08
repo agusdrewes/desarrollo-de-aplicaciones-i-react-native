@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { useAuthService } from '../services/AuthServices';
+import React, { useState } from 'react';
+import { useAuthService } from '../services/authService';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/RegisterStyle';
 import { useNavigation } from '@react-navigation/native';
@@ -50,7 +50,7 @@ export default function Register() {
       try {
         await register(email, `${nombre} ${apellido}`, password, confirmPassword);
         Alert.alert('Éxito', 'Revisa tu email para confirmar el registro');
-        navigation.navigate('Login');
+        navigation.navigate('ConfirmSignup');
       } catch (error) {
         Alert.alert('Error', error.response?.data?.message || 'No se pudo registrar');
       }

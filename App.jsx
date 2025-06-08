@@ -4,11 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
 import ForgotPassword from './src/screens/ForgotPassword';
-import Login from './src/screens/Login';
-import { PaperProvider, MD3LightTheme as DefaultTheme } from 'react-native-paper';
 import ConfirmSignup from './src/screens/ConfirmSignup';
-import ConfirmPassword from './src/screens/ConfirmPassword'
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import ConfirmPassword from './src/screens/ConfirmPassword';
+import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 
 const Stack = createNativeStackNavigator();
@@ -24,36 +22,25 @@ function AppContent() {
   //Vamos agregando al Stack.Navigator las pantallas individuales, después las unimos
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="ConfirmSignup" component={ConfirmSignup} />
-        <Stack.Screen name="ConfirmPassword" component={ConfirmPassword} />
+      {isAuthenticated ? (
+        <AppNavigator />
+      ) : (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-      </Stack.Navigator>
+          <Stack.Screen name="ConfirmSignup" component={ConfirmSignup} />
+          <Stack.Screen name="ConfirmPassword" component={ConfirmPassword} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#6200ee',
-    secondary: '#03dac6',
-    background: '#f6f6f6',
-  },
-};
-
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <PaperProvider theme={theme}>
-        <AuthProvider>
-          <AppContent />
-        </AuthProvider>
-      </PaperProvider>
-    </SafeAreaProvider>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
