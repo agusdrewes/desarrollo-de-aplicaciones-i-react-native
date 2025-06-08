@@ -29,11 +29,11 @@ export default function Routes() {
     fetchRoutes();
   }, []);
 
-  const handlePressItem = (item) => {
+  const handlePressItem = item => {
     navigation.navigate('RouteDetails', {
       packageId: item.packageId,
       warehouse: item.warehouse,
-      destinationNeiborhood: item.destinationNeiborhood,
+      destinationNeighborhood: item.destinationNeighborhood,
     });
   };
 
@@ -42,7 +42,7 @@ export default function Routes() {
       <MaterialIcons name="local-shipping" size={24} color="#555" style={styles.icon} />
       <View>
         <Text style={styles.title}>{item.warehouse}</Text>
-        <Text style={styles.subtitle}>{item.destinationNeiborhood}</Text>
+        <Text style={styles.subtitle}>{item.destinationNeighborhood}</Text>
         <Text style={styles.packageId}>ID: {item.packageId}</Text>
       </View>
     </TouchableOpacity>
@@ -53,11 +53,7 @@ export default function Routes() {
       {loading ? (
         <ActivityIndicator animating={true} size="large" style={styles.loader} />
       ) : (
-        <FlatList
-          data={routes}
-          keyExtractor={(item) => item.packageId}
-          renderItem={renderItem}
-        />
+        <FlatList data={routes} keyExtractor={item => item.packageId} renderItem={renderItem} />
       )}
       <Snackbar
         visible={snackbarVisible}

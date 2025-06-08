@@ -28,9 +28,7 @@ const Tabs = () => (
       component={HistoryScreen}
       options={{
         tabBarLabel: 'Historial',
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="history" size={size} color={color} />
-        ),
+        tabBarIcon: ({ color, size }) => <MaterialIcons name="history" size={size} color={color} />,
       }}
     />
     <Tab.Screen
@@ -38,9 +36,7 @@ const Tabs = () => (
       component={Logout}
       options={{
         tabBarLabel: 'Salir',
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="logout" size={size} color={color} />
-        ),
+        tabBarIcon: ({ color, size }) => <MaterialIcons name="logout" size={size} color={color} />,
       }}
     />
   </Tab.Navigator>
@@ -49,7 +45,11 @@ const Tabs = () => (
 const AppNavigator = () => (
   <Stack.Navigator>
     <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
-    <Stack.Screen name="RouteDetails" component={RouteDetails} options={{ title: 'Detalle de Ruta' }} />
+    <Stack.Screen
+      name="RouteDetails"
+      component={RouteDetails}
+      options={{ title: 'Detalle de Ruta' }}
+    />
   </Stack.Navigator>
 );
 

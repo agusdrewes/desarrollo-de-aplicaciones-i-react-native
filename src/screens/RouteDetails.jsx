@@ -1,11 +1,10 @@
-import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 export default function RouteDetails() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { packageId, warehouse, destinationNeiborhood } = route.params;
+  const { packageId, warehouse, destinationNeighborhood } = route.params;
 
   return (
     <View style={styles.container}>
@@ -17,7 +16,7 @@ export default function RouteDetails() {
       <Text style={styles.value}>{warehouse}</Text>
 
       <Text style={styles.label}>Barrio de Destino:</Text>
-      <Text style={styles.value}>{destinationNeiborhood}</Text>
+      <Text style={styles.value}>{destinationNeighborhood}</Text>
 
       <Button title="Volver" onPress={() => navigation.goBack()} />
     </View>
