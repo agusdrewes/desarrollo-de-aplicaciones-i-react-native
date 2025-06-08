@@ -18,6 +18,7 @@ export const getErrorMessage = error => {
 export const useAxios = () => {
   const { logout } = useContext(AuthContext);
   const navigation = useNavigation();
+  // This ip is for Android emulators, use 'localhost' for iOS or web
   const axiosInstance = useRef(axios.create({ baseURL: 'http://10.0.2.2:3000' }));
 
   useEffect(() => {

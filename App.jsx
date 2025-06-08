@@ -3,12 +3,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
-import Home from './src/screens/Home';
+import ForgotPassword from './src/screens/ForgotPassword';
 import Login from './src/screens/Login';
 import { PaperProvider, MD3LightTheme as DefaultTheme } from 'react-native-paper';
 import ConfirmSignup from './src/screens/ConfirmSignup';
 import ConfirmPassword from './src/screens/ConfirmPassword'
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Register from './src/screens/Register';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,8 @@ function AppContent() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="ConfirmSignup" component={ConfirmSignup} />
         <Stack.Screen name="ConfirmPassword" component={ConfirmPassword} />
+          <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );
