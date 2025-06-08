@@ -12,21 +12,21 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { useEntregaService } from '../services/entregaService';
+import { useDeliveryService } from '../services/DeliveryService';
 
 const DeliveryHistory = ({ navigation }) => {
   const [deliveries, setDeliveries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
-  const { getEntregasDelRepartidor } = useEntregaService();
+  const { getDeliveries } = useDeliveryService();
 
   const fetchDeliveries = async () => {
     try {
       setLoading(true);
       setError(null);
       console.log('Intentando obtener entregas...');
-      const data = await getEntregasDelRepartidor();
+      const data = await getDeliveries();
       console.log('Entregas recibidas:', data);
       setDeliveries(data);
     } catch (error) {

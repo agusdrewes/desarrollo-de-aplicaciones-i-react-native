@@ -11,14 +11,14 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { useEntregaService } from '../services/entregaService';
+import { useDeliveryService } from '../services/DeliveryService';
 
 const DetailedDeliveryView = ({ route, navigation }) => {
   const { delivery: initialDelivery } = route.params;
   const [delivery, setDelivery] = useState(initialDelivery);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { getEntregaById } = useEntregaService();
+  const { getDeliveryById } = useDeliveryService();
 
   useEffect(() => {
     fetchDeliveryDetails();
@@ -28,7 +28,7 @@ const DetailedDeliveryView = ({ route, navigation }) => {
     try {
       setLoading(true);
       setError(null);
-      const updatedDelivery = await getEntregaById(initialDelivery.id);
+      const updatedDelivery = await getDeliveryById(initialDelivery.id);
       setDelivery(updatedDelivery);
     } catch (error) {
       console.error('Error fetching delivery details:', error);
