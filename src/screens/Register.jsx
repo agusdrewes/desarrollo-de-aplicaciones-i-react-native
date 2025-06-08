@@ -3,6 +3,7 @@ import { useAuthService } from '../services/AuthServices';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/RegisterStyle';
 import { useNavigation } from '@react-navigation/native';
+import isEmailValid from '../utils/isEmailValid'
 
 export default function Register() {
   const navigation = useNavigation();
@@ -23,7 +24,7 @@ export default function Register() {
         if (!apellido.trim()) newErrors.apellido = 'El apellido no puede estar vacío';
         if (!email.trim()) {
             newErrors.email = 'El email no puede estar vacío';
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        } else if (!isEmailValid(email)) {
             newErrors.email = 'Formato de email inválido';
         }
         if (!password) {

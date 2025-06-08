@@ -26,5 +26,18 @@ export const useAuthService = () => {
         }
     };
 
-    return { login, register };
+    const resetPassword = async (email, password, passwordConfirmation) => {
+        try {
+            await axiosInstance.post('/auth/password-reset', {
+                email,
+                password,
+                passwordConfirmation,
+            });
+        } catch (error) {
+            console.error('Error al recuperar password:', error.response?.data || error.message);
+            throw error;
+        }
+    }
+
+    return { login, register, resetPassword };
 }
