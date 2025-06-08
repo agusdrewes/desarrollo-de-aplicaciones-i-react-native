@@ -6,6 +6,27 @@ const OtpInput = ({ value = '', onChange }) => {
   const inputs = useRef([]);
   const handleChange = (text, idx) => {
     const otpArray = value.split('');
+
+    // If text is empty (backspace/delete was pressed)
+    if (!text) {
+      // Clear current field
+      otpArray[idx] = '';
+      // Focus previous field if not at the first input
+      if (idx > 0) {
+        inputs.current[idx - 1].focus();
+      }
+    } else {
+      // Only allow numeric input - reject if no numbers found
+      const numericText = text.replace(/[^0-9]/g, '');
+      if (!numericText) {
+        // If no numeric characters found, don't update anything
+        return;
+      }
+
+      // Take only the last digit
+      otpArray[idx] = numericText.slice(0, 1);
+    }
+
     otpArray[idx] = text.replace(/[^0-9]/g, '').slice(0, 1);
     const newValue = otpArray.join('').slice(0, 6);
 
@@ -14,7 +35,8 @@ const OtpInput = ({ value = '', onChange }) => {
       onChange(newValue);
     }
 
-    if (text && idx < 5) {
+    // Move to next field only if we have a valid digit and not at the last input
+    if (text && /^\d$/.test(text) && idx < 5) {
       inputs.current[idx + 1].focus();
     }
   };
@@ -34,11 +56,12 @@ const OtpInput = ({ value = '', onChange }) => {
           style={styles.input}
           contentStyle={styles.inputContent}
           keyboardType="number-pad"
-          maxLength={1}
+          inputMode="numeric"
           value={value[idx] || ''}
           onChangeText={text => handleChange(text, idx)}
           onKeyPress={e => handleKeyPress(e, idx)}
           returnKeyType="next"
+          maxLength={1}
           autoFocus={idx === 0}
         />
       ))}
@@ -51,7 +74,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-evenly',
-    paddingHorizontal: 20,
   },
   input: {
     flex: 1,

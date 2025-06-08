@@ -4,6 +4,17 @@ import { AuthContext } from '../context/AuthContext';
 import { getToken } from '../utils/tokenStorage';
 import { useNavigation } from '@react-navigation/native';
 
+export const getErrorMessage = error => {
+  // Try different common error message locations
+  return (
+    error.response?.data?.message ||
+    error.response?.data?.error ||
+    error.response?.data?.details ||
+    error.message ||
+    null
+  );
+};
+
 export const useAxios = () => {
   const { logout } = useContext(AuthContext);
   const navigation = useNavigation();
@@ -36,5 +47,5 @@ export const useAxios = () => {
     );
   }, []);
 
-  return axiosInstance.current;
+  return { axiosInstance: axiosInstance.current, getErrorMessage };
 };

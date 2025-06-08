@@ -1,7 +1,7 @@
 import { useAxios } from '../hooks/useAxios';
 
 export const useAuthService = () => {
-  const axiosInstance = useAxios();
+  const { axiosInstance, getErrorMessage } = useAxios();
 
   /**
    *
@@ -20,7 +20,26 @@ export const useAuthService = () => {
     }
   };
 
+  /**
+   *
+   * @param {string} otp
+   * @returns
+   */
+  const confirmPassword = async otp => {
+    try {
+      const response = await axiosInstance.post('/auth/password-reset/confirm', {
+        otp,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error confirming password reset:', error);
+      throw error;
+    }
+  };
+
   return {
     confirmSignup,
+    confirmPassword,
+    getErrorMessage,
   };
 };

@@ -3,9 +3,9 @@ import { Alert, StyleSheet, View } from 'react-native';
 import { useAuthService } from '../services/authService';
 import OtpForm from '../components/otp/OtpForm';
 
-export default function ConfirmSignup({ navigation }) {
+export default function ConfirmPassword({ navigation }) {
   const [otp, setOtp] = useState('');
-  const { confirmSignup, getErrorMessage } = useAuthService();
+  const { confirmPassword, getErrorMessage } = useAuthService();
 
   const navigateToHome = () => {
     navigation.navigate('Home');
@@ -13,12 +13,12 @@ export default function ConfirmSignup({ navigation }) {
 
   const handleVerify = async () => {
     try {
-      // Call the confirmSignup function with the OTP
-      await confirmSignup(otp);
-      console.log('Signup confirmed');
+      // Call the confirmPassword function with the OTP
+      await confirmPassword(otp);
+      console.log('Password reset confirmed');
       Alert.alert(
         'Confirmación exitosa',
-        'Tu cuenta ha sido confirmada correctamente. Serás redirigido al inicio.',
+        'Tu contraseña ha sido restablecida correctamente. Serás redirigido al inicio.',
         [
           {
             text: 'OK',
@@ -27,11 +27,11 @@ export default function ConfirmSignup({ navigation }) {
         ]
       );
     } catch (error) {
-      console.error('Error confirming signup:', error);
+      console.error('Error confirming password reset:', error);
       Alert.alert(
         'Confirmación incorrecta',
-        getErrorMessage ||
-          'Ocurrió un error al confirmar tu cuenta. Por favor, verifica el código e inténtalo de nuevo.',
+        getErrorMessage(error) ||
+          'Ocurrió un error al confirmar tu contraseña. Por favor, verifica el código e inténtalo de nuevo.',
         [
           {
             text: 'OK',
@@ -49,7 +49,7 @@ export default function ConfirmSignup({ navigation }) {
   return (
     <View style={styles.container}>
       <OtpForm
-        titleText="Ingresá el código que te enviamos a tu email para confirmar el registro"
+        titleText="Ingresá el código que te enviamos a tu email para confirmar el cambio de clave"
         acceptButtonText="Verificar"
         cancelButtonText="Cancelar"
         onCancel={navigateToHome}

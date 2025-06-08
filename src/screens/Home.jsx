@@ -18,6 +18,13 @@ export default Home = ({ navigation }) => {
         >
           Go to Confirm Signup Screen
         </Button>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate('ConfirmPassword')}
+          style={styles.button}
+        >
+          Go to Confirm Password Screen
+        </Button>
         <View style={styles.buttonSpacer} />
       </View>
     </View>
