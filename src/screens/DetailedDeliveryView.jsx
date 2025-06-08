@@ -46,16 +46,16 @@ const DetailedDeliveryView = ({ route, navigation }) => {
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case 'entregado':
-        return '#4CAF50'; // Verde
+        return '#4CAF50'; 
       case 'cancelado':
-        return '#F44336'; // Rojo
+        return '#F44336'; 
       case 'demorado':
-        return '#FF9800'; // Naranja
+        return '#FF9800'; 
       case 'en camino':
-        return '#2196F3'; // Azul
+        return '#2196F3'; 
       case 'pendiente':
       default:
-        return '#9E9E9E'; // Gris
+        return '#9E9E9E'; 
     }
   };
 
