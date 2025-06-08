@@ -30,7 +30,7 @@ export default function ConfirmSignup({ navigation }) {
       console.error('Error confirming signup:', error);
       Alert.alert(
         'Confirmación incorrecta',
-        getErrorMessage ||
+        getErrorMessage(error) ||
           'Ocurrió un error al confirmar tu cuenta. Por favor, verifica el código e inténtalo de nuevo.',
         [
           {
