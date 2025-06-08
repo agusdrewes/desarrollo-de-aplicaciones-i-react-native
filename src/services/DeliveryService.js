@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 export const useDeliveryService = () => {
-  const axiosInstance = useAxios();
+  const { axiosInstance } = useAxios();
   const { token } = useContext(AuthContext);
 
   const getDeliveries = async () => {
