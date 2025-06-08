@@ -116,13 +116,10 @@ const DeliveryHistory = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar
+      <StatusBars
         barStyle="dark-content"
         backgroundColor="#fff"
       />
-      <View style={styles.header}>
-        <Text style={styles.title}>Historial de Entregas</Text>
-      </View>
       <FlatList
         contentContainerStyle={styles.listContent}
         data={deliveries}
