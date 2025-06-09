@@ -11,7 +11,7 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { useDeliveryService } from '../services/DeliveryService';
+import { useDeliveryService } from '../services/deliveryService';
 
 const DetailedDeliveryView = ({ route, navigation }) => {
   const { delivery: initialDelivery } = route.params;
@@ -39,23 +39,23 @@ const DetailedDeliveryView = ({ route, navigation }) => {
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     return new Date(dateString).toLocaleDateString('es-AR');
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = status => {
     switch (status.toLowerCase()) {
       case 'entregado':
-        return '#4CAF50'; 
+        return '#4CAF50';
       case 'cancelado':
-        return '#F44336'; 
+        return '#F44336';
       case 'demorado':
-        return '#FF9800'; 
+        return '#FF9800';
       case 'en camino':
-        return '#2196F3'; 
+        return '#2196F3';
       case 'pendiente':
       default:
-        return '#9E9E9E'; 
+        return '#9E9E9E';
     }
   };
 
@@ -84,10 +84,7 @@ const DetailedDeliveryView = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#fff"
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.infoSection}>
           <Text style={styles.label}>ID de Entrega:</Text>
@@ -96,10 +93,7 @@ const DetailedDeliveryView = ({ route, navigation }) => {
 
         <View style={styles.infoSection}>
           <Text style={styles.label}>Estado:</Text>
-          <Text style={[
-            styles.value,
-            { color: getStatusColor(delivery.estado) }
-          ]}>
+          <Text style={[styles.value, { color: getStatusColor(delivery.estado) }]}>
             {delivery.estado}
           </Text>
         </View>
@@ -124,10 +118,7 @@ const DetailedDeliveryView = ({ route, navigation }) => {
           <Text style={styles.value}>{delivery.repartidorEmail}</Text>
         </View>
 
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
           <Text style={styles.buttonText}>Volver</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -195,4 +186,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetailedDeliveryView; 
+export default DetailedDeliveryView;

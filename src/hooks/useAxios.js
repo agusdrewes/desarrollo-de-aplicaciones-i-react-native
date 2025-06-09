@@ -5,6 +5,17 @@ import { getToken } from '../utils/tokenStorage';
 import { useNavigation } from '@react-navigation/native';
 import { Platform } from 'react-native';
 
+export const getErrorMessage = error => {
+  // Try different common error message locations
+  return (
+    error.response?.data?.message ||
+    error.response?.data?.error ||
+    error.response?.data?.details ||
+    error.message ||
+    null
+  );
+};
+
 export const useAxios = () => {
   const { logout } = useContext(AuthContext);
   const navigation = useNavigation();
@@ -19,20 +30,22 @@ export const useAxios = () => {
     }
   };
 
-  const axiosInstance = useRef(axios.create({ 
-    baseURL: getBaseUrl(),
-    timeout: 10000, // Timeout de 10 segundos
-  }));
+  const axiosInstance = useRef(
+    axios.create({
+      baseURL: getBaseUrl(),
+      timeout: 10000, // Timeout de 10 segundos
+    })
+  );
 
   useEffect(() => {
     const instance = axiosInstance.current;
 
     instance.interceptors.request.use(async config => {
-        const token = await getToken();
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
+      const token = await getToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
     });
 
     instance.interceptors.response.use(
@@ -51,5 +64,5 @@ export const useAxios = () => {
     );
   }, []);
 
-  return axiosInstance.current;
+  return { axiosInstance: axiosInstance.current, getErrorMessage };
 };

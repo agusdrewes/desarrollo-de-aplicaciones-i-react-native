@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
 import ForgotPassword from './src/screens/ForgotPassword';
+import ConfirmSignup from './src/screens/ConfirmSignup';
+import ConfirmPassword from './src/screens/ConfirmPassword';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 
@@ -27,6 +29,8 @@ function AppContent() {
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+          <Stack.Screen name="ConfirmSignup" component={ConfirmSignup} />
+          <Stack.Screen name="ConfirmPassword" component={ConfirmPassword} />
         </Stack.Navigator>
       )}
     </NavigationContainer>

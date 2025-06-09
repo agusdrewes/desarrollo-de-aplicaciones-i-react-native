@@ -13,7 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Snackbar } from 'react-native-paper';
 import isEmailValid from '../utils/isEmailValid'
-import { useAuthService } from '../services/AuthServices';
+import { useAuthService } from '../services/authService';
 
 export default function ForgotPassword() {
   const navigation = useNavigation();
@@ -73,6 +73,7 @@ export default function ForgotPassword() {
       );
       setSnackbarError(false);
       setVisible(true);
+      navigation.navigate('ConfirmPassword')
     } catch (error) {
       let msg = err?.response?.data?.message;
       if (Array.isArray(msg)) {
@@ -150,7 +151,7 @@ export default function ForgotPassword() {
             onPress={handleResetPassword}
             disabled={!isFormValid}
           >
-            <Text style={styles.loginButtonText}>Recuperar clave</Text>
+            <Text style={styles.forgotPasswordButtonText}>Recuperar clave</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -159,15 +160,6 @@ export default function ForgotPassword() {
         </View>
         <Snackbar
           visible={visible}
-          onDismiss={() => {
-            setVisible(false);
-            navigation.navigate('Login');
-          }}
-          duration={4000}
-          action={{
-            label: 'Volver',
-            onPress: () => navigation.navigate('Login'),
-          }}
           style={snackbarError ? { backgroundColor: '#c0392b' } : { backgroundColor: '#27ae60' }}
         >
           {snackbarMsg}
@@ -209,7 +201,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
   },
-  loginButtonText: {
+  forgotPasswordButtonText: {
     color: '#fff',
     fontWeight: 'bold',
   },

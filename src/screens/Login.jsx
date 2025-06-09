@@ -1,13 +1,13 @@
-import React, { useState, useContext } from 'react';
+import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/LoginStyle';
-import { useAuthService } from '../services/AuthServices';
+import { useAuthService } from '../services/authService';
 import isEmailValid from '../utils/isEmailValid'
 
 export default function Login() {
   const navigation = useNavigation();
-  const { login } = useAuthService();
+  const { login } = useAuthService(); 
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -87,4 +87,4 @@ export default function Login() {
     </ScrollView>
     </KeyboardAvoidingView>
   );
-}
+};
