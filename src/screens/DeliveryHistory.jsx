@@ -12,7 +12,7 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { useDeliveryService } from '../services/DeliveryService';
+import { useDeliveryService } from '../services/deliveryService';
 
 const DeliveryHistory = ({ navigation }) => {
   const [deliveries, setDeliveries] = useState([]);
@@ -51,23 +51,23 @@ const DeliveryHistory = ({ navigation }) => {
     fetchDeliveries();
   }, []);
 
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     return new Date(dateString).toLocaleDateString('es-AR');
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = status => {
     switch (status.toLowerCase()) {
       case 'entregado':
-        return '#4CAF50'; 
+        return '#4CAF50';
       case 'cancelado':
-        return '#F44336'; 
+        return '#F44336';
       case 'demorado':
-        return '#FF9800'; 
+        return '#FF9800';
       case 'en camino':
-        return '#2196F3'; 
+        return '#2196F3';
       case 'pendiente':
       default:
-        return '#9E9E9E'; 
+        return '#9E9E9E';
     }
   };
 
@@ -78,12 +78,7 @@ const DeliveryHistory = ({ navigation }) => {
     >
       <View style={styles.deliveryHeader}>
         <Text style={styles.deliveryId}>#{item.id.slice(0, 8)}</Text>
-        <Text style={[
-          styles.status,
-          { color: getStatusColor(item.estado) }
-        ]}>
-          {item.estado}
-        </Text>
+        <Text style={[styles.status, { color: getStatusColor(item.estado) }]}>{item.estado}</Text>
       </View>
       <Text style={styles.text}>Cliente: {item.cliente}</Text>
       <Text style={styles.text}>Fecha: {formatDate(item.fechaEntrega)}</Text>
@@ -116,18 +111,13 @@ const DeliveryHistory = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      
       <FlatList
         contentContainerStyle={styles.listContent}
         data={deliveries}
         renderItem={renderDeliveryItem}
-        keyExtractor={(item) => item.id}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>No hay entregas disponibles</Text>
-        }
+        keyExtractor={item => item.id}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        ListEmptyComponent={<Text style={styles.emptyText}>No hay entregas disponibles</Text>}
       />
     </SafeAreaView>
   );
@@ -201,4 +191,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeliveryHistory; 
+export default DeliveryHistory;
