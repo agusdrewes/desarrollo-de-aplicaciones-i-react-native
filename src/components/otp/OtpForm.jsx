@@ -29,7 +29,6 @@ export default function OtpForm({
       <OtpInput value={value} onChange={onChange} />
       <View style={styles.buttonContainer}>
         <Button
-          title={acceptButtonText}
           mode="contained"
           onPress={onAccept}
           style={styles.button}
@@ -37,7 +36,7 @@ export default function OtpForm({
         >
           {acceptButtonText}
         </Button>
-        <Button title={cancelButtonText} mode="contained" onPress={onCancel} style={styles.button}>
+        <Button mode="contained" onPress={onCancel} style={styles.button}>
           {cancelButtonText}
         </Button>
       </View>
