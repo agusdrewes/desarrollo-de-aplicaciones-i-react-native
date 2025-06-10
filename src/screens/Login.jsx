@@ -12,6 +12,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const validateEmail = (value) => {
     if (!isEmailValid(value)) {
@@ -21,8 +22,18 @@ export default function Login() {
     }
   };
 
+  const validatePassword = (value) => {
+    if (!value) {
+      setPasswordError('La contraseña no puede estar vacía');
+    } else if (value.length < 6) {
+      setPasswordError('Debe tener al menos 6 caracteres');
+    } else {
+      setPasswordError('');
+    }
+  };
+
   const handleLogin = async () => {
-    if (!emailError && email && password) {
+    if (!emailError && !passwordError && email && password) {
       try {
         await login(email, password);
       } catch (error) {
@@ -36,7 +47,7 @@ export default function Login() {
     }
   };
 
-  const isFormValid = email && password && !emailError;
+  const isFormValid = email && password && !emailError && !passwordError;
 
   return (
     <KeyboardAvoidingView
@@ -61,12 +72,16 @@ export default function Login() {
       {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
       <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+            style={styles.input}
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={text => {
+              setPassword(text);
+              validatePassword(text);
+            }}
+            secureTextEntry
+          />
+          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
       <TouchableOpacity
         style={[styles.loginButton, !isFormValid && styles.disabledButton]}
