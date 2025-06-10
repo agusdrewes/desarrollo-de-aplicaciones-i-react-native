@@ -6,6 +6,8 @@ import RouteDetails from '../screens/RouteDetails';
 import DeliveryHistory from '../screens/DeliveryHistory';
 import DetailedDeliveryView from '../screens/DetailedDeliveryView';
 import Logout from '../screens/Logout';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Platform } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,20 +54,25 @@ const DeliveriesStack = () => (
 );
 
 const Tabs = () => (
-  <Tab.Navigator
-    screenOptions={{
-      tabBarActiveTintColor: '#2196F3',
-      tabBarInactiveTintColor: '#666',
-      tabBarStyle: {
-        paddingBottom: 5,
-        height: 60,
-      },
-      tabBarLabelStyle: {
-        fontSize: 12,
-        marginBottom: 5,
-      },
-    }}
-  >
+  <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#2196F3',
+        tabBarInactiveTintColor: '#666',
+        tabBarStyle: {
+          height: Platform.OS === 'android' ? 70 : 80,
+          paddingBottom: Platform.OS === 'android' ? 10 : 20,
+          backgroundColor: '#fff',
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          marginBottom: 5,
+        },
+        headerShown: false,
+      }}
+    >
     <Tab.Screen
       name="Routes"
       component={RoutesStack}
@@ -94,7 +101,8 @@ const Tabs = () => (
         tabBarIcon: ({ color, size }) => <MaterialIcons name="logout" size={size} color={color} />,
       }}
     />
-  </Tab.Navigator>
+    </Tab.Navigator>
+  </SafeAreaView>
 );
 
 const AppNavigator = () => (

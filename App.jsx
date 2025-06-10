@@ -8,6 +8,7 @@ import ConfirmSignup from './src/screens/ConfirmSignup';
 import ConfirmPassword from './src/screens/ConfirmPassword';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,8 +40,10 @@ function AppContent() {
 
 export default function App() {
   return (
+    <SafeAreaProvider>
     <AuthProvider>
       <AppContent />
     </AuthProvider>
+    </SafeAreaProvider>
   );
 }
