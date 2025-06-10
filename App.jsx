@@ -10,6 +10,11 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+//Silence console logs, warnings, and errors (we need to make this configurable later)
+console.log = () => {};
+console.warn = () => {};
+console.error = () => {};
+
 const Stack = createNativeStackNavigator();
 
 function AppContent() {
@@ -41,9 +46,9 @@ function AppContent() {
 export default function App() {
   return (
     <SafeAreaProvider>
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }
