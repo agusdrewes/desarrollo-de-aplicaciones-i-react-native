@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
@@ -9,13 +9,110 @@ import ConfirmPassword from './src/screens/ConfirmPassword';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  configureNotifications,
+  requestNotificationPermissions,
+  startPeriodicNotifications,
+  stopPeriodicNotifications,
+} from './src/services/notificationsService';
+import { useRoutesService } from './src/services/routesService';
 
 //Silence console logs, warnings, and errors (we need to make this configurable later)
-console.log = () => {};
-console.warn = () => {};
-console.error = () => {};
+// console.log = () => {};
+// console.warn = () => {};
+// console.error = () => {};
 
 const Stack = createNativeStackNavigator();
+
+// Component to handle notifications inside NavigationContainer
+function NotificationHandler() {
+  const { getPendingRoutes, getAssignedRoutes } = useRoutesService();
+  const navigation = useNavigation();
+
+  // Handle notification click
+  const handleNotificationClick = data => {
+    console.log('[NotificationHandler] Notification clicked with data:', data);
+
+    if (data.notificationId === 'pending-routes') {
+      // Navigate to pending routes screen
+      navigation.navigate('PendingRoutes');
+    } else if (data.notificationId === 'assigned-routes') {
+      // Navigate to assigned routes screen
+      navigation.navigate('AssignedRoutes');
+    }
+  };
+
+  // Data mapping function: extract IDs from response
+  const mapRouteData = data => {
+    return Array.isArray(data) ? data.map(item => item.id).filter(id => id !== undefined) : [];
+  };
+
+  // Change detection function: check for new IDs only (ignore removals)
+  const detectNewRoutes = (currentIds, previousIds) => {
+    if (!Array.isArray(currentIds) || !Array.isArray(previousIds)) {
+      return false;
+    }
+
+    const newIds = currentIds.filter(id => !previousIds.includes(id));
+    if (newIds.length > 0) {
+      console.log(`[NotificationHandler] Encontrados ${newIds.length} nuevos IDs:`, newIds);
+      return true;
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    async function setupNotifications() {
+      try {
+        //Configure notifications with click handler
+        await configureNotifications(handleNotificationClick);
+
+        const permissionsGranted = await requestNotificationPermissions();
+        if (!permissionsGranted) {
+          console.log('No se otorgaron permisos de notificación');
+          return;
+        }
+
+        // Setup pending routes notifications
+        startPeriodicNotifications(
+          'pending-routes',
+          getPendingRoutes,
+          mapRouteData,
+          detectNewRoutes,
+          'Hay nuevas rutas disponibles! 📍',
+          'Se han encontrado nuevas rutas que pueden interesarte.',
+          10
+        ); // Check every 1 minute
+
+        // Setup assigned routes notifications
+        startPeriodicNotifications(
+          'assigned-routes',
+          getAssignedRoutes,
+          mapRouteData,
+          detectNewRoutes,
+          'Tenés nuevas rutas asignadas! 🏍️',
+          'Se te han asignado nuevas rutas para completar.',
+          10
+        ); // Check every 1 minute
+      } catch (error) {
+        console.error('Error setting up notifications:', error);
+      }
+    }
+
+    setupNotifications();
+
+    return () => {
+      // Limpiar cuando el componente se desmonta
+      try {
+        stopPeriodicNotifications();
+      } catch (e) {
+        console.error('Error al detener notificaciones:', e);
+      }
+    };
+  }, [getPendingRoutes, getAssignedRoutes]);
+
+  return null; // This component doesn't render anything
+}
 
 function AppContent() {
   const { isAuthenticated } = React.useContext(AuthContext);
@@ -29,7 +126,10 @@ function AppContent() {
   return (
     <NavigationContainer>
       {isAuthenticated ? (
-        <AppNavigator />
+        <>
+          <NotificationHandler />
+          <AppNavigator />
+        </>
       ) : (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={Login} />

@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
 import PendingRoutes from '../screens/PendingRoutes';
 import PendingRouteDetails from '../screens/PendingRouteDetails';
-import DeliveryHistory from '../screens/AssignedRoutes';
 import AssignedRouteDetails from '../screens/AssignedRouteDetails';
 import Logout from '../screens/Logout';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -28,10 +27,10 @@ const PendingRoutesStack = () => (
   </Stack.Navigator>
 );
 
-const DeliveriesStack = () => (
+const AssignedRoutesStack = () => (
   <Stack.Navigator>
     <Stack.Screen
-      name="AssignedRoutes"
+      name="AssignedRoutesList"
       component={AssignedRoutes}
       options={{
         headerShown: false,
@@ -86,8 +85,8 @@ const Tabs = () => (
         }}
       />
       <Tab.Screen
-        name="Historial"
-        component={DeliveriesStack}
+        name="AssignedRoutes"
+        component={AssignedRoutesStack}
         options={{
           headerShown: false,
           tabBarLabel: 'Historial',

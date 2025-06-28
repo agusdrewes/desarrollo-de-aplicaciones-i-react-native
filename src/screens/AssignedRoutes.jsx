@@ -12,14 +12,15 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { useroutesService } from '../services/routesService';
+import { useFocusEffect } from '@react-navigation/native';
+import { useRoutesService } from '../services/routesService';
 
 const AssignedRoutes = ({ navigation }) => {
   const [assignedRoutes, setAssignedRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { getAssignedRoutes } = useroutesService();
+  const { getAssignedRoutes } = useRoutesService();
 
   const fetchAssignedRoutes = async () => {
     try {
@@ -36,12 +37,20 @@ const AssignedRoutes = ({ navigation }) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    fetchDeliveries().finally(() => setRefreshing(false));
+    fetchAssignedRoutes().finally(() => setRefreshing(false));
   }, []);
 
   useEffect(() => {
     fetchAssignedRoutes();
   }, []);
+
+  // Auto-refresh when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('[AssignedRoutes] Screen focused, refreshing data');
+      fetchAssignedRoutes();
+    }, [])
+  );
 
   const formatDate = dateString => {
     return new Date(dateString).toLocaleDateString('es-AR');
@@ -53,6 +62,8 @@ const AssignedRoutes = ({ navigation }) => {
         return '#4CAF50';
       case 'on_route':
         return '#2196F3';
+      default:
+        return '#666'; //  Default color for unknown status
     }
   };
 
@@ -62,6 +73,8 @@ const AssignedRoutes = ({ navigation }) => {
         return 'Entregado';
       case 'on_route':
         return 'En camino';
+      default:
+        return 'Estado desconocido'; // Default text for unknown status
     }
   };
 
