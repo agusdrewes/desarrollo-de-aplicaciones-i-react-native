@@ -1,6 +1,6 @@
 import * as Notifications from 'expo-notifications';
 
-let previousIds = null;
+let previousData = null;
 
 export async function configureNotifications() {
   Notifications.setNotificationHandler({
@@ -30,14 +30,23 @@ export async function sendNotification(title, body) {
 let notificationInterval = null;
 
 /**
- *
- * @param {function} dataFetcher
- * @param {string} title
- * @param {string} message
- * @param {number} intervalMinutes
- * @returns
+ * Start periodic notifications with configurable data mapping and comparison
+ * @param {function} dataFetcher - Function that fetches the data
+ * @param {function} dataMapper - Function to extract comparable data from response
+ * @param {function} changeDetector - Function to detect if notification should be sent
+ * @param {string} title - Notification title
+ * @param {string} message - Notification message
+ * @param {number} intervalMinutes - Check interval in minutes
+ * @returns {boolean}
  */
-export function startPeriodicNotifications(dataFetcher, title, message, intervalMinutes = 1) {
+export function startPeriodicNotifications(
+  dataFetcher,
+  dataMapper,
+  changeDetector,
+  title,
+  message,
+  intervalMinutes = 1
+) {
   if (notificationInterval) {
     clearInterval(notificationInterval);
   }
@@ -50,32 +59,25 @@ export function startPeriodicNotifications(dataFetcher, title, message, interval
     try {
       console.log('[Notification] Verificando datos');
       const response = await dataFetcher();
-      const currentData = response.data;
+      const currentData = dataMapper(response.data);
 
-      // Extract IDs from the response data
-      const currentIds = Array.isArray(currentData)
-        ? currentData.map(item => item.id).filter(id => id !== undefined)
-        : [];
-
-      if (!previousIds) {
-        console.log('[Notification] No hay IDs anteriores, guardando los actuales');
-        previousIds = [...currentIds];
+      if (!previousData) {
+        console.log('[Notification] No hay datos anteriores, guardando los actuales');
+        previousData = currentData;
         return; // No enviar notificación en el primer ciclo
       }
 
-      // Find new IDs that weren't in the previous response
-      const newIds = currentIds.filter(id => !previousIds.includes(id));
+      const shouldNotify = changeDetector(currentData, previousData);
 
-      //This avoids sending notifications if an id is missing in the new response (that route has been taken)
-      if (newIds.length > 0) {
-        console.log(`[Notification] Encontrados ${newIds.length} nuevos IDs:`, newIds);
-        previousIds = [...currentIds];
+      if (shouldNotify) {
+        console.log('[Notification] Cambios detectados, enviando notificación');
+        previousData = currentData;
         await sendNotification(title, message);
         console.log('[Notification] Notificación enviada - nuevos datos detectados');
       } else {
-        console.log('[Notification] No se encontraron nuevos IDs');
-        // Update previousIds to current ones (in case some were removed)
-        previousIds = [...currentIds];
+        console.log('[Notification] No se detectaron cambios que requieran notificación');
+        // Update previousData to current ones (in case some were removed)
+        previousData = currentData;
       }
     } catch (error) {
       console.error('[Notification] Error:', error);

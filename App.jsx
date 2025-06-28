@@ -28,6 +28,25 @@ const Stack = createNativeStackNavigator();
 function NotificationHandler() {
   const { getPendingRoutes } = useRoutesService();
 
+  // Data mapping function: extract IDs from response
+  const mapRouteData = data => {
+    return Array.isArray(data) ? data.map(item => item.id).filter(id => id !== undefined) : [];
+  };
+
+  // Change detection function: check for new IDs only (ignore removals)
+  const detectNewRoutes = (currentIds, previousIds) => {
+    if (!Array.isArray(currentIds) || !Array.isArray(previousIds)) {
+      return false;
+    }
+
+    const newIds = currentIds.filter(id => !previousIds.includes(id));
+    if (newIds.length > 0) {
+      console.log(`[NotificationHandler] Encontrados ${newIds.length} nuevos IDs:`, newIds);
+      return true;
+    }
+    return false;
+  };
+
   useEffect(() => {
     async function setupNotifications() {
       try {
@@ -42,6 +61,8 @@ function NotificationHandler() {
 
         startPeriodicNotifications(
           getPendingRoutes,
+          mapRouteData,
+          detectNewRoutes,
           'Hay nuevas rutas disponibles!',
           'Se han encontrado nuevas rutas que pueden interesarte.',
           1
