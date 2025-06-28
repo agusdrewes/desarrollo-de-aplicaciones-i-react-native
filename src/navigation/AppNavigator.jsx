@@ -1,27 +1,28 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
-import Routes from '../screens/Routes';
-import RouteDetails from '../screens/RouteDetails';
-import DeliveryHistory from '../screens/DeliveryHistory';
-import DetailedDeliveryView from '../screens/DetailedDeliveryView';
+import PendingRoutes from '../screens/PendingRoutes';
+import PendingRouteDetails from '../screens/PendingRouteDetails';
+import DeliveryHistory from '../screens/AssignedRoutes';
+import AssignedRouteDetails from '../screens/AssignedRouteDetails';
 import Logout from '../screens/Logout';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
+import AssignedRoutes from '../screens/AssignedRoutes';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const RoutesStack = () => (
+const PendingRoutesStack = () => (
   <Stack.Navigator>
     <Stack.Screen
-      name="RoutesList"
-      component={Routes}
+      name="PendingRoutesList"
+      component={PendingRoutes}
       options={{ headerShown: false }}
     />
     <Stack.Screen
-      name="RouteDetails"
-      component={RouteDetails}
+      name="PendingRouteDetails"
+      component={PendingRouteDetails}
       options={{ title: 'Detalle de Ruta' }}
     />
   </Stack.Navigator>
@@ -30,16 +31,16 @@ const RoutesStack = () => (
 const DeliveriesStack = () => (
   <Stack.Navigator>
     <Stack.Screen
-      name="DeliveriesList"
-      component={DeliveryHistory}
-      options={{ 
-        headerShown: false
+      name="AssignedRoutes"
+      component={AssignedRoutes}
+      options={{
+        headerShown: false,
       }}
     />
     <Stack.Screen
-      name="DeliveryDetail"
-      component={DetailedDeliveryView}
-      options={{ 
+      name="AssignedRouteDetails"
+      component={AssignedRouteDetails}
+      options={{
         title: 'Detalle de Entrega',
         headerStyle: {
           backgroundColor: '#f5f5f5',
@@ -73,34 +74,38 @@ const Tabs = () => (
         headerShown: false,
       }}
     >
-    <Tab.Screen
-      name="Routes"
-      component={RoutesStack}
-      options={{
-        headerShown: false,
-        tabBarLabel: 'Rutas',
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="local-shipping" size={size} color={color} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Historial"
-      component={DeliveriesStack}
-      options={{
-        headerShown: false,
-        tabBarLabel: 'Historial',
-        tabBarIcon: ({ color, size }) => <MaterialIcons name="history" size={size} color={color} />,
-      }}
-    />
-    <Tab.Screen
-      name="Logout"
-      component={Logout}
-      options={{
-        tabBarLabel: 'Salir',
-        tabBarIcon: ({ color, size }) => <MaterialIcons name="logout" size={size} color={color} />,
-      }}
-    />
+      <Tab.Screen
+        name="PendingRoutes"
+        component={PendingRoutesStack}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Rutas',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="local-shipping" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Historial"
+        component={DeliveriesStack}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Historial',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="history" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Logout"
+        component={Logout}
+        options={{
+          tabBarLabel: 'Salir',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="logout" size={size} color={color} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   </SafeAreaView>
 );
