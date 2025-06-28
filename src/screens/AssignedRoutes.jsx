@@ -12,31 +12,23 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { useDeliveryService } from '../services/deliveryService';
+import { useroutesService } from '../services/routesService';
 
-const DeliveryHistory = ({ navigation }) => {
-  const [deliveries, setDeliveries] = useState([]);
+const AssignedRoutes = ({ navigation }) => {
+  const [assignedRoutes, setAssignedRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState(null);
-  const { getDeliveries } = useDeliveryService();
+  const [errorMessage, setErrorMessage] = useState('');
+  const { getAssignedRoutes } = useroutesService();
 
-  const fetchDeliveries = async () => {
+  const fetchAssignedRoutes = async () => {
     try {
+      const res = await getAssignedRoutes();
+      setAssignedRoutes(res.data);
+    } catch (err) {
       setLoading(true);
-      setError(null);
-      console.log('Intentando obtener entregas...');
-      const data = await getDeliveries();
-      console.log('Entregas recibidas:', data);
-      setDeliveries(data);
-    } catch (error) {
-      console.error('Error detallado:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-      });
-      setError('Error al cargar las entregas');
-      Alert.alert('Error', 'No se pudieron cargar las entregas');
+      console.error('Error fetching assigned routes:', err);
+      setErrorMessage('Error al obtener las rutas asignadas');
     } finally {
       setLoading(false);
     }
@@ -48,7 +40,7 @@ const DeliveryHistory = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    fetchDeliveries();
+    fetchAssignedRoutes();
   }, []);
 
   const formatDate = dateString => {
@@ -57,32 +49,36 @@ const DeliveryHistory = ({ navigation }) => {
 
   const getStatusColor = status => {
     switch (status.toLowerCase()) {
-      case 'entregado':
+      case 'completed':
         return '#4CAF50';
-      case 'cancelado':
-        return '#F44336';
-      case 'demorado':
-        return '#FF9800';
-      case 'en camino':
+      case 'on_route':
         return '#2196F3';
-      case 'pendiente':
-      default:
-        return '#9E9E9E';
     }
   };
 
-  const renderDeliveryItem = ({ item }) => (
+  const getStatusText = status => {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return 'Entregado';
+      case 'on_route':
+        return 'En camino';
+    }
+  };
+
+  const renderAssignedRouteItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.deliveryItem}
-      onPress={() => navigation.navigate('DeliveryDetail', { delivery: item })}
+      style={styles.assignedRoutesItem}
+      onPress={() => navigation.navigate('AssignedRouteDetails', { id: item.id })}
     >
-      <View style={styles.deliveryHeader}>
-        <Text style={styles.deliveryId}>#{item.id.slice(0, 8)}</Text>
-        <Text style={[styles.status, { color: getStatusColor(item.estado) }]}>{item.estado}</Text>
+      <View style={styles.assignedRoutesHeader}>
+        <Text style={styles.id}>#{item.id.slice(0, 8)}</Text>
+        <Text style={[styles.status, { color: getStatusColor(item.status) }]}>
+          {getStatusText(item.status)}
+        </Text>
       </View>
-      <Text style={styles.text}>Cliente: {item.cliente}</Text>
-      <Text style={styles.text}>Fecha: {formatDate(item.fechaEntrega)}</Text>
-      <Text style={styles.text}>Dirección: {item.direccion}</Text>
+      <Text style={styles.text}>Cliente: {item.clientName}</Text>
+      <Text style={styles.text}>Fecha: {formatDate(item.date)}</Text>
+      <Text style={styles.text}>Dirección: {item.address}</Text>
     </TouchableOpacity>
   );
 
@@ -96,12 +92,12 @@ const DeliveryHistory = ({ navigation }) => {
     );
   }
 
-  if (error) {
+  if (errorMessage) {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
-          <Text style={styles.error}>{error}</Text>
-          <TouchableOpacity style={styles.button} onPress={fetchDeliveries}>
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+          <TouchableOpacity style={styles.button} onPress={fetchAssignedRoutes}>
             <Text style={styles.buttonText}>Reintentar</Text>
           </TouchableOpacity>
         </View>
@@ -113,8 +109,8 @@ const DeliveryHistory = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <FlatList
         contentContainerStyle={styles.listContent}
-        data={deliveries}
-        renderItem={renderDeliveryItem}
+        data={assignedRoutes}
+        renderItem={renderAssignedRouteItem}
         keyExtractor={item => item.id}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         ListEmptyComponent={<Text style={styles.emptyText}>No hay entregas disponibles</Text>}
@@ -151,18 +147,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  deliveryItem: {
+  assignedRoutesItem: {
     backgroundColor: '#f8f8f8',
     padding: 15,
     marginVertical: 5,
     borderRadius: 5,
   },
-  deliveryHeader: {
+  assignedRoutesHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 5,
   },
-  deliveryId: {
+  id: {
     fontWeight: 'bold',
   },
   status: {
@@ -171,7 +167,7 @@ const styles = StyleSheet.create({
   text: {
     marginVertical: 2,
   },
-  error: {
+  errorMessage: {
     color: 'red',
     marginBottom: 10,
   },
@@ -191,4 +187,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeliveryHistory;
+export default AssignedRoutes;

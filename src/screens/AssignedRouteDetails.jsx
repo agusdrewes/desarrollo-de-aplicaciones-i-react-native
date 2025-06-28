@@ -11,25 +11,21 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { useDeliveryService } from '../services/deliveryService';
+import { useroutesService } from '../services/routesService';
 
-const DetailedDeliveryView = ({ route, navigation }) => {
-  const { delivery: initialDelivery } = route.params;
-  const [delivery, setDelivery] = useState(initialDelivery);
+const AssignedRouteDetails = ({ route, navigation }) => {
+  const { id } = route.params;
+  const [assignedRoute, setAssignedRoute] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { getDeliveryById } = useDeliveryService();
+  const { getAssignedRouteById } = useroutesService();
 
-  useEffect(() => {
-    fetchDeliveryDetails();
-  }, []);
-
-  const fetchDeliveryDetails = async () => {
+  const fetchAssignedRouteDetails = async () => {
     try {
       setLoading(true);
       setError(null);
-      const updatedDelivery = await getDeliveryById(initialDelivery.id);
-      setDelivery(updatedDelivery);
+      const res = await getAssignedRouteById(id);
+      setAssignedRoute(res.data);
     } catch (error) {
       console.error('Error fetching delivery details:', error);
       setError('Error al cargar los detalles');
@@ -39,23 +35,48 @@ const DetailedDeliveryView = ({ route, navigation }) => {
     }
   };
 
+  useEffect(() => {
+    fetchAssignedRouteDetails();
+  }, []);
+
   const formatDate = dateString => {
     return new Date(dateString).toLocaleDateString('es-AR');
   };
 
+  // Get the days and hours between two dates
+  const getTimeDifference = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffInMs = end - start;
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInHours / 24);
+    const remainingHours = diffInHours % 24;
+    if (diffInDays === 1 && remainingHours === 1) {
+      return `${diffInDays} día y ${remainingHours} hora`;
+    } else if (diffInDays === 1) {
+      return `${diffInDays} día y ${remainingHours} horas`;
+    } else if (remainingHours === 1) {
+      return `${diffInDays} días y ${remainingHours} hora`;
+    } else {
+      return `${diffInDays} días y ${remainingHours} horas`;
+    }
+  };
+
   const getStatusColor = status => {
     switch (status.toLowerCase()) {
-      case 'entregado':
+      case 'completed':
         return '#4CAF50';
-      case 'cancelado':
-        return '#F44336';
-      case 'demorado':
-        return '#FF9800';
-      case 'en camino':
+      case 'on_route':
         return '#2196F3';
-      case 'pendiente':
-      default:
-        return '#9E9E9E';
+    }
+  };
+
+  const getStatusText = status => {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return 'Entregado';
+      case 'on_route':
+        return 'En camino';
     }
   };
 
@@ -74,7 +95,7 @@ const DetailedDeliveryView = ({ route, navigation }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
           <Text style={styles.error}>{error}</Text>
-          <TouchableOpacity style={styles.button} onPress={fetchDeliveryDetails}>
+          <TouchableOpacity style={styles.button} onPress={fetchAssignedRouteDetails}>
             <Text style={styles.buttonText}>Reintentar</Text>
           </TouchableOpacity>
         </View>
@@ -88,34 +109,49 @@ const DetailedDeliveryView = ({ route, navigation }) => {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.infoSection}>
           <Text style={styles.label}>ID de Entrega:</Text>
-          <Text style={styles.value}>#{delivery.id.slice(0, 8)}</Text>
+          <Text style={styles.value}>#{assignedRoute.id.slice(0, 8)}</Text>
         </View>
 
         <View style={styles.infoSection}>
           <Text style={styles.label}>Estado:</Text>
-          <Text style={[styles.value, { color: getStatusColor(delivery.estado) }]}>
-            {delivery.estado}
+          <Text style={[styles.value, { color: getStatusColor(assignedRoute.status) }]}>
+            {getStatusText(assignedRoute.status)}
           </Text>
         </View>
 
         <View style={styles.infoSection}>
           <Text style={styles.label}>Cliente:</Text>
-          <Text style={styles.value}>{delivery.cliente}</Text>
+          <Text style={styles.value}>{assignedRoute.clientName}</Text>
         </View>
 
         <View style={styles.infoSection}>
-          <Text style={styles.label}>Fecha de Entrega:</Text>
-          <Text style={styles.value}>{formatDate(delivery.fechaEntrega)}</Text>
+          <Text style={styles.label}>Fecha de Asignación:</Text>
+          <Text style={styles.value}>{formatDate(assignedRoute.delivery.assignedAt)}</Text>
         </View>
+
+        <>
+          {assignedRoute.status.toLowerCase() === 'completed' && (
+            <>
+              <View style={styles.infoSection}>
+                <Text style={styles.label}>Fecha de Entrega:</Text>
+                <Text style={styles.value}>{formatDate(assignedRoute.delivery.deliveredAt)}</Text>
+              </View>
+              <View style={styles.infoSection}>
+                <Text style={styles.label}>Tiempo de Entrega:</Text>
+                <Text style={styles.value}>
+                  {getTimeDifference(
+                    assignedRoute.delivery.assignedAt,
+                    assignedRoute.delivery.deliveredAt
+                  )}
+                </Text>
+              </View>
+            </>
+          )}
+        </>
 
         <View style={styles.infoSection}>
           <Text style={styles.label}>Dirección:</Text>
-          <Text style={styles.value}>{delivery.direccion}</Text>
-        </View>
-
-        <View style={styles.infoSection}>
-          <Text style={styles.label}>Repartidor:</Text>
-          <Text style={styles.value}>{delivery.repartidorEmail}</Text>
+          <Text style={styles.value}>{assignedRoute.destination.address}</Text>
         </View>
 
         <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
@@ -186,4 +222,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetailedDeliveryView;
+export default AssignedRouteDetails;

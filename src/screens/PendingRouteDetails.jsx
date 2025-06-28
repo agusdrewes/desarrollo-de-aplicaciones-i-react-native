@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-export default function RouteDetails() {
+export default function PendingRouteDetails() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { id, warehouseName, destinationNeighborhood } = route.params;
+  const { id, warehouse, destinationNeighborhood } = route.params;
 
   return (
     <View style={styles.container}>
@@ -13,7 +13,11 @@ export default function RouteDetails() {
       <Text style={styles.value}>{id}</Text>
 
       <Text style={styles.label}>Depósito:</Text>
-      <Text style={styles.value}>{warehouseName}</Text>
+      <Text style={styles.value}>{warehouse.name}</Text>
+      <Text style={styles.label}>Seccion:</Text>
+      <Text style={styles.value}>{warehouse.section}</Text>
+      <Text style={styles.label}>Estante:</Text>
+      <Text style={styles.value}>{warehouse.shelf}</Text>
 
       <Text style={styles.label}>Barrio de Destino:</Text>
       <Text style={styles.value}>{destinationNeighborhood}</Text>

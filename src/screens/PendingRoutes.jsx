@@ -3,15 +3,15 @@ import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native
 import { ActivityIndicator, Snackbar } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { useRouteService } from '../services/routeService';
+import { useroutesService } from '../services/routesService';
 
-export default function Routes() {
+export default function PendingRoutes() {
   const [routes, setRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
-  const { getPendingRoutes } = useRouteService();
+  const { getPendingRoutes } = useroutesService();
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -30,9 +30,9 @@ export default function Routes() {
   }, []);
 
   const handlePressItem = item => {
-    navigation.navigate('RouteDetails', {
+    navigation.navigate('PendingRouteDetails', {
       id: item.id,
-      warehouseName: item.warehouseName,
+      warehouse: item.warehouse,
       destinationNeighborhood: item.destinationNeighborhood,
     });
   };
@@ -41,7 +41,7 @@ export default function Routes() {
     <TouchableOpacity style={styles.item} onPress={() => handlePressItem(item)}>
       <MaterialIcons name="local-shipping" size={24} color="#555" style={styles.icon} />
       <View>
-        <Text style={styles.title}>{item.warehouseName}</Text>
+        <Text style={styles.title}>{item.warehouse.name}</Text>
         <Text style={styles.subtitle}>{item.destinationNeighborhood}</Text>
         <Text style={styles.id}>ID: {item.id}</Text>
       </View>
