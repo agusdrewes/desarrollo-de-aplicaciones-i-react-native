@@ -12,6 +12,7 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useRoutesService } from '../services/routesService';
 
 const AssignedRoutes = ({ navigation }) => {
@@ -42,6 +43,14 @@ const AssignedRoutes = ({ navigation }) => {
   useEffect(() => {
     fetchAssignedRoutes();
   }, []);
+
+  // Auto-refresh when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('[AssignedRoutes] Screen focused, refreshing data');
+      fetchAssignedRoutes();
+    }, [])
+  );
 
   const formatDate = dateString => {
     return new Date(dateString).toLocaleDateString('es-AR');

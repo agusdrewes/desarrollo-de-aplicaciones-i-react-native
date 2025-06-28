@@ -3,7 +3,7 @@ import React from 'react';
 import { View, FlatList, Text, TouchableOpacity, StyleSheet, RefreshControl } from 'react-native';
 import { ActivityIndicator, Snackbar } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useRoutesService } from '../services/routesService';
 
 export default function PendingRoutes() {
@@ -37,6 +37,14 @@ export default function PendingRoutes() {
     fetchRoutes();
   }, []);
 
+  // Auto-refresh when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('[PendingRoutes] Screen focused, refreshing data');
+      fetchRoutes();
+    }, [])
+  );
+
   const handlePressItem = item => {
     navigation.navigate('PendingRouteDetails', {
       id: item.id,
@@ -61,16 +69,11 @@ export default function PendingRoutes() {
       {loading && !refreshing ? (
         <ActivityIndicator animating={true} size="large" style={styles.loader} />
       ) : (
-        <FlatList 
-          data={routes} 
-          keyExtractor={item => item.id} 
+        <FlatList
+          data={routes}
+          keyExtractor={item => item.id}
           renderItem={renderItem}
-          refreshControl={
-            <RefreshControl 
-              refreshing={refreshing} 
-              onRefresh={onRefresh} 
-            />
-          }
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
       )}
       <Snackbar
