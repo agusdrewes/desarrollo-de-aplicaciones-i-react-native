@@ -26,7 +26,7 @@ const Stack = createNativeStackNavigator();
 
 // Component to handle notifications inside NavigationContainer
 function NotificationHandler() {
-  const { getPendingRoutes } = useRoutesService();
+  const { getPendingRoutes, getAssignedRoutes } = useRoutesService();
 
   // Data mapping function: extract IDs from response
   const mapRouteData = data => {
@@ -50,7 +50,7 @@ function NotificationHandler() {
   useEffect(() => {
     async function setupNotifications() {
       try {
-        //Configure new pending routes notifications
+        //Configure notifications
         await configureNotifications();
 
         const permissionsGranted = await requestNotificationPermissions();
@@ -59,14 +59,27 @@ function NotificationHandler() {
           return;
         }
 
+        // Setup pending routes notifications
         startPeriodicNotifications(
+          'pending-routes',
           getPendingRoutes,
           mapRouteData,
           detectNewRoutes,
-          'Hay nuevas rutas disponibles!',
+          'Hay nuevas rutas disponibles! 📍',
           'Se han encontrado nuevas rutas que pueden interesarte.',
           1
-        ); // Iniciar notificaciones cada 1 minuto
+        ); // Check every 1 minute
+
+        // Setup assigned routes notifications
+        startPeriodicNotifications(
+          'assigned-routes',
+          getAssignedRoutes,
+          mapRouteData,
+          detectNewRoutes,
+          'Tenés nuevas rutas asignadas! 🏍️',
+          'Se te han asignado nuevas rutas para completar.',
+          1
+        ); // Check every 1 minute
       } catch (error) {
         console.error('Error setting up notifications:', error);
       }
@@ -82,7 +95,7 @@ function NotificationHandler() {
         console.error('Error al detener notificaciones:', e);
       }
     };
-  }, [getPendingRoutes]);
+  }, [getPendingRoutes, getAssignedRoutes]);
 
   return null; // This component doesn't render anything
 }

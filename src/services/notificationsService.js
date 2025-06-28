@@ -1,7 +1,5 @@
 import * as Notifications from 'expo-notifications';
 
-let previousData = null;
-
 export async function configureNotifications() {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -27,10 +25,11 @@ export async function sendNotification(title, body) {
   });
 }
 
-let notificationInterval = null;
+let notificationIntervals = new Map();
 
 /**
  * Start periodic notifications with configurable data mapping and comparison
+ * @param {string} notificationId - Unique identifier for this notification type
  * @param {function} dataFetcher - Function that fetches the data
  * @param {function} dataMapper - Function to extract comparable data from response
  * @param {function} changeDetector - Function to detect if notification should be sent
@@ -39,7 +38,8 @@ let notificationInterval = null;
  * @param {number} intervalMinutes - Check interval in minutes
  * @returns {boolean}
  */
-export function startPeriodicNotifications(
+export async function startPeriodicNotifications(
+  notificationId,
   dataFetcher,
   dataMapper,
   changeDetector,
@@ -47,22 +47,31 @@ export function startPeriodicNotifications(
   message,
   intervalMinutes = 1
 ) {
-  if (notificationInterval) {
-    clearInterval(notificationInterval);
+  // Clear existing interval for this notification type if it exists
+  if (notificationIntervals.has(notificationId)) {
+    const existing = notificationIntervals.get(notificationId);
+    clearInterval(existing.interval);
   }
 
+  // Fetch initial data and set up the interval
+  const response = await dataFetcher();
+  let previousData = dataMapper(response.data);
   const intervalMs = intervalMinutes * 60 * 1000;
 
-  console.log(`[Notification] Iniciando notificaciones periódicas cada ${intervalMinutes} minutos`);
+  console.log(
+    `[Notification] Iniciando notificaciones periódicas "${notificationId}" cada ${intervalMinutes} minutos`
+  );
 
-  notificationInterval = setInterval(async () => {
+  const interval = setInterval(async () => {
     try {
-      console.log('[Notification] Verificando datos');
+      console.log(`[Notification] Verificando datos para "${notificationId}"`);
       const response = await dataFetcher();
       const currentData = dataMapper(response.data);
 
       if (!previousData) {
-        console.log('[Notification] No hay datos anteriores, guardando los actuales');
+        console.log(
+          `[Notification] No hay datos anteriores para "${notificationId}", guardando los actuales`
+        );
         previousData = currentData;
         return; // No enviar notificación en el primer ciclo
       }
@@ -70,29 +79,43 @@ export function startPeriodicNotifications(
       const shouldNotify = changeDetector(currentData, previousData);
 
       if (shouldNotify) {
-        console.log('[Notification] Cambios detectados, enviando notificación');
+        console.log(
+          `[Notification] Cambios detectados en "${notificationId}", enviando notificación`
+        );
         previousData = currentData;
         await sendNotification(title, message);
-        console.log('[Notification] Notificación enviada - nuevos datos detectados');
+        console.log(
+          `[Notification] Notificación enviada para "${notificationId}" - nuevos datos detectados`
+        );
       } else {
-        console.log('[Notification] No se detectaron cambios que requieran notificación');
+        console.log(
+          `[Notification] No se detectaron cambios que requieran notificación para "${notificationId}"`
+        );
         // Update previousData to current ones (in case some were removed)
         previousData = currentData;
       }
     } catch (error) {
-      console.error('[Notification] Error:', error);
+      console.error(`[Notification] Error en "${notificationId}":`, error);
     }
   }, intervalMs);
+
+  // Store the interval and its associated data
+  notificationIntervals.set(notificationId, {
+    interval: interval,
+    previousData: previousData,
+  });
 
   return true;
 }
 
 export function stopPeriodicNotifications() {
-  if (notificationInterval) {
-    clearInterval(notificationInterval);
-    notificationInterval = null;
-    console.log('[Notification] Notificaciones periódicas detenidas');
-    return true;
+  // Stop all notifications
+  let stoppedCount = 0;
+  for (const [id, data] of notificationIntervals) {
+    clearInterval(data.interval);
+    stoppedCount++;
   }
-  return false;
+  notificationIntervals.clear();
+  console.log(`[Notification] ${stoppedCount} notificaciones periódicas detenidas`);
+  return stoppedCount > 0;
 }
