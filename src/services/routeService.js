@@ -3,14 +3,17 @@ import { useAxios } from '../hooks/useAxios';
 export const useRouteService = () => {
   const { axiosInstance } = useAxios();
 
-  const getRoutes = async () => {
+  const getPendingRoutes = async () => {
     try {
-      return await axiosInstance.get('/routes');
+      return await axiosInstance.get('/routes/pending');
     } catch (error) {
-      console.error('Error al obtener las rutas:', error.response?.data || error.message);
+      console.error(
+        'Error al obtener las rutas pendientes:',
+        error.response?.data || error.message
+      );
       throw error;
     }
   };
 
-  return { getRoutes };
+  return { getPendingRoutes };
 };

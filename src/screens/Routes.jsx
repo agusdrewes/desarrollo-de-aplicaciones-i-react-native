@@ -11,12 +11,12 @@ export default function Routes() {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
-  const { getRoutes } = useRouteService();
+  const { getPendingRoutes } = useRouteService();
 
   useEffect(() => {
     const fetchRoutes = async () => {
       try {
-        const res = await getRoutes();
+        const res = await getPendingRoutes();
         setRoutes(res.data);
       } catch (err) {
         setErrorMessage('Error al obtener las rutas');
@@ -31,8 +31,8 @@ export default function Routes() {
 
   const handlePressItem = item => {
     navigation.navigate('RouteDetails', {
-      packageId: item.packageId,
-      warehouse: item.warehouse,
+      id: item.id,
+      warehouseName: item.warehouseName,
       destinationNeighborhood: item.destinationNeighborhood,
     });
   };
@@ -41,9 +41,9 @@ export default function Routes() {
     <TouchableOpacity style={styles.item} onPress={() => handlePressItem(item)}>
       <MaterialIcons name="local-shipping" size={24} color="#555" style={styles.icon} />
       <View>
-        <Text style={styles.title}>{item.warehouse}</Text>
+        <Text style={styles.title}>{item.warehouseName}</Text>
         <Text style={styles.subtitle}>{item.destinationNeighborhood}</Text>
-        <Text style={styles.packageId}>ID: {item.packageId}</Text>
+        <Text style={styles.id}>ID: {item.id}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -53,7 +53,7 @@ export default function Routes() {
       {loading ? (
         <ActivityIndicator animating={true} size="large" style={styles.loader} />
       ) : (
-        <FlatList data={routes} keyExtractor={item => item.packageId} renderItem={renderItem} />
+        <FlatList data={routes} keyExtractor={item => item.id} renderItem={renderItem} />
       )}
       <Snackbar
         visible={snackbarVisible}
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
-  packageId: {
+  id: {
     fontSize: 12,
     color: '#999',
   },

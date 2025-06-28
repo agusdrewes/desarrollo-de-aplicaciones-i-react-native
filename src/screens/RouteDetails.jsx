@@ -4,16 +4,16 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 export default function RouteDetails() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { packageId, warehouse, destinationNeighborhood } = route.params;
+  const { id, warehouseName, destinationNeighborhood } = route.params;
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Detalle de Ruta</Text>
       <Text style={styles.label}>ID del Paquete:</Text>
-      <Text style={styles.value}>{packageId}</Text>
+      <Text style={styles.value}>{id}</Text>
 
       <Text style={styles.label}>Depósito:</Text>
-      <Text style={styles.value}>{warehouse}</Text>
+      <Text style={styles.value}>{warehouseName}</Text>
 
       <Text style={styles.label}>Barrio de Destino:</Text>
       <Text style={styles.value}>{destinationNeighborhood}</Text>
