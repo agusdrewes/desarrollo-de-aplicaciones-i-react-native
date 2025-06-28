@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, FlatList, Text, TouchableOpacity, StyleSheet, RefreshControl } from 'react-native';
 import { ActivityIndicator, Snackbar } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -8,24 +9,31 @@ import { useRoutesService } from '../services/routesService';
 export default function PendingRoutes() {
   const [routes, setRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
   const { getPendingRoutes } = useRoutesService();
 
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        const res = await getPendingRoutes();
-        setRoutes(res.data);
-      } catch (err) {
-        setErrorMessage('Error al obtener las rutas');
-        setSnackbarVisible(true);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchRoutes = async () => {
+    try {
+      setErrorMessage(''); // Clear any previous errors
+      const res = await getPendingRoutes();
+      setRoutes(res.data);
+    } catch (err) {
+      setErrorMessage('Error al obtener las rutas');
+      setSnackbarVisible(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchRoutes().finally(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() => {
     fetchRoutes();
   }, []);
 
@@ -50,10 +58,20 @@ export default function PendingRoutes() {
 
   return (
     <View style={styles.container}>
-      {loading ? (
+      {loading && !refreshing ? (
         <ActivityIndicator animating={true} size="large" style={styles.loader} />
       ) : (
-        <FlatList data={routes} keyExtractor={item => item.id} renderItem={renderItem} />
+        <FlatList 
+          data={routes} 
+          keyExtractor={item => item.id} 
+          renderItem={renderItem}
+          refreshControl={
+            <RefreshControl 
+              refreshing={refreshing} 
+              onRefresh={onRefresh} 
+            />
+          }
+        />
       )}
       <Snackbar
         visible={snackbarVisible}

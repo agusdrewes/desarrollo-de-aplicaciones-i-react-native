@@ -1,6 +1,6 @@
 import * as Notifications from 'expo-notifications';
 
-export async function configureNotifications() {
+export async function configureNotifications(onNotificationClick = null) {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -8,6 +8,15 @@ export async function configureNotifications() {
       shouldSetBadge: false,
     }),
   });
+
+  // Set up notification response listener for when user taps notification
+  if (onNotificationClick) {
+    Notifications.addNotificationResponseReceivedListener(response => {
+      console.log('[Notification] Notification clicked:', response);
+      const notificationData = response.notification.request.content.data;
+      onNotificationClick(notificationData);
+    });
+  }
 }
 
 export async function requestNotificationPermissions() {
@@ -15,11 +24,13 @@ export async function requestNotificationPermissions() {
   return status === 'granted';
 }
 
-export async function sendNotification(title, body) {
+export async function sendNotification(title, body, data = {}) {
   await Notifications.scheduleNotificationAsync({
     content: {
       title,
       body,
+      autoDismiss: true,
+      data: data, // Custom data to pass with the notification
     },
     trigger: null,
   });
@@ -45,7 +56,7 @@ export async function startPeriodicNotifications(
   changeDetector,
   title,
   message,
-  intervalMinutes = 1
+  intervalSeconds = 10
 ) {
   // Clear existing interval for this notification type if it exists
   if (notificationIntervals.has(notificationId)) {
@@ -56,10 +67,10 @@ export async function startPeriodicNotifications(
   // Fetch initial data and set up the interval
   const response = await dataFetcher();
   let previousData = dataMapper(response.data);
-  const intervalMs = intervalMinutes * 60 * 1000;
+  const intervalMs = intervalSeconds * 1000;
 
   console.log(
-    `[Notification] Iniciando notificaciones periódicas "${notificationId}" cada ${intervalMinutes} minutos`
+    `[Notification] Iniciando notificaciones periódicas "${notificationId}" cada ${intervalSeconds} segundos`
   );
 
   const interval = setInterval(async () => {
@@ -83,7 +94,10 @@ export async function startPeriodicNotifications(
           `[Notification] Cambios detectados en "${notificationId}", enviando notificación`
         );
         previousData = currentData;
-        await sendNotification(title, message);
+        await sendNotification(title, message, {
+          notificationId: notificationId,
+          timestamp: new Date().toISOString(),
+        });
         console.log(
           `[Notification] Notificación enviada para "${notificationId}" - nuevos datos detectados`
         );

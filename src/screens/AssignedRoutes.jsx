@@ -36,7 +36,7 @@ const AssignedRoutes = ({ navigation }) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    fetchDeliveries().finally(() => setRefreshing(false));
+    fetchAssignedRoutes().finally(() => setRefreshing(false));
   }, []);
 
   useEffect(() => {
@@ -53,6 +53,8 @@ const AssignedRoutes = ({ navigation }) => {
         return '#4CAF50';
       case 'on_route':
         return '#2196F3';
+      default:
+        return '#666'; //  Default color for unknown status
     }
   };
 
@@ -62,6 +64,8 @@ const AssignedRoutes = ({ navigation }) => {
         return 'Entregado';
       case 'on_route':
         return 'En camino';
+      default:
+        return 'Estado desconocido'; // Default text for unknown status
     }
   };
 

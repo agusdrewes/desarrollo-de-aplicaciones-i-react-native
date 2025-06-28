@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
@@ -27,6 +27,20 @@ const Stack = createNativeStackNavigator();
 // Component to handle notifications inside NavigationContainer
 function NotificationHandler() {
   const { getPendingRoutes, getAssignedRoutes } = useRoutesService();
+  const navigation = useNavigation();
+
+  // Handle notification click
+  const handleNotificationClick = data => {
+    console.log('[NotificationHandler] Notification clicked with data:', data);
+
+    if (data.notificationId === 'pending-routes') {
+      // Navigate to pending routes screen
+      navigation.navigate('PendingRoutes');
+    } else if (data.notificationId === 'assigned-routes') {
+      // Navigate to assigned routes screen
+      navigation.navigate('AssignedRoutes');
+    }
+  };
 
   // Data mapping function: extract IDs from response
   const mapRouteData = data => {
@@ -50,8 +64,8 @@ function NotificationHandler() {
   useEffect(() => {
     async function setupNotifications() {
       try {
-        //Configure notifications
-        await configureNotifications();
+        //Configure notifications with click handler
+        await configureNotifications(handleNotificationClick);
 
         const permissionsGranted = await requestNotificationPermissions();
         if (!permissionsGranted) {
@@ -67,7 +81,7 @@ function NotificationHandler() {
           detectNewRoutes,
           'Hay nuevas rutas disponibles! 📍',
           'Se han encontrado nuevas rutas que pueden interesarte.',
-          1
+          10
         ); // Check every 1 minute
 
         // Setup assigned routes notifications
@@ -78,7 +92,7 @@ function NotificationHandler() {
           detectNewRoutes,
           'Tenés nuevas rutas asignadas! 🏍️',
           'Se te han asignado nuevas rutas para completar.',
-          1
+          10
         ); // Check every 1 minute
       } catch (error) {
         console.error('Error setting up notifications:', error);
