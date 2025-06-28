@@ -12,14 +12,14 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { useroutesService } from '../services/routesService';
+import { useRoutesService } from '../services/routesService';
 
 const AssignedRoutes = ({ navigation }) => {
   const [assignedRoutes, setAssignedRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { getAssignedRoutes } = useroutesService();
+  const { getAssignedRoutes } = useRoutesService();
 
   const fetchAssignedRoutes = async () => {
     try {

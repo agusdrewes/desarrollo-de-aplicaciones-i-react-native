@@ -1,6 +1,6 @@
 import { useAxios } from '../hooks/useAxios';
 
-export const useroutesService = () => {
+export const useRoutesService = () => {
   const { axiosInstance } = useAxios();
 
   const getPendingRoutes = async () => {
@@ -19,10 +19,7 @@ export const useroutesService = () => {
     try {
       return await axiosInstance.get('/routes/assigned');
     } catch (error) {
-      console.error(
-        'Error al obtener las rutas pendientes:',
-        error.response?.data || error.message
-      );
+      console.error('Error al obtener las rutas asignadas:', error.response?.data || error.message);
       throw error;
     }
   };
@@ -32,7 +29,7 @@ export const useroutesService = () => {
       return await axiosInstance.get(`/routes/assigned/${id}`);
     } catch (error) {
       console.error(
-        'Error al obtener las rutas pendientes:',
+        'Error al obtener la ruta asignada por id:',
         error.response?.data || error.message
       );
       throw error;

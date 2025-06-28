@@ -3,7 +3,7 @@ import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native
 import { ActivityIndicator, Snackbar } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { useroutesService } from '../services/routesService';
+import { useRoutesService } from '../services/routesService';
 
 export default function PendingRoutes() {
   const [routes, setRoutes] = useState([]);
@@ -11,7 +11,7 @@ export default function PendingRoutes() {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
-  const { getPendingRoutes } = useroutesService();
+  const { getPendingRoutes } = useRoutesService();
 
   useEffect(() => {
     const fetchRoutes = async () => {

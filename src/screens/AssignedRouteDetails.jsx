@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,14 +11,14 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { useroutesService } from '../services/routesService';
+import { useRoutesService } from '../services/routesService';
 
 const AssignedRouteDetails = ({ route, navigation }) => {
   const { id } = route.params;
   const [assignedRoute, setAssignedRoute] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { getAssignedRouteById } = useroutesService();
+  const { getAssignedRouteById } = useRoutesService();
 
   const fetchAssignedRouteDetails = async () => {
     try {
