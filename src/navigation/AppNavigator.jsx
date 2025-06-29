@@ -10,6 +10,9 @@ import { Platform } from 'react-native';
 import AssignedRoutes from '../screens/AssignedRoutes';
 import QRScanner from '../screens/QRScanner';
 import ConfirmDelivery from '../screens/ConfirmDelivery';
+import { TouchableOpacity } from 'react-native';
+
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -108,16 +111,26 @@ const Tabs = () => (
           ),
         }}
       />
+
       <Tab.Screen
-      name="QR"
-      component={QRScanner}
-      options={{
-        headerShown: false,
-        tabBarLabel: 'Escanear QR',
-        tabBarIcon: ({ color, size }) => <MaterialIcons name="qr-code-scanner" size={size} color={color} />,
-        unmountOnBlur: true, 
-      }}
-    />
+        name="QRButton"
+        component={() => null} // No renderiza ningún componente
+        options={({ navigation }) => ({
+          tabBarLabel: 'Escanear',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="qr-code-scanner" size={size} color={color} />
+          ),
+          tabBarButton: (props) => (
+            <TouchableOpacity
+              {...props}
+              onPress={() => navigation.navigate('QRScanner')} // Navega al stack
+              style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
+            />
+          ),
+        })}
+      />
+
+     
       <Tab.Screen
         name="AssignedRoutes"
         component={AssignedRoutesStack}
@@ -146,6 +159,14 @@ const Tabs = () => (
 const AppNavigator = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="MainTabs" component={Tabs} />
+     <Stack.Screen
+      name="QRScanner"
+      component={QRScanner}
+      options={{
+        title: 'Escanear QR',
+        unmountOnBlur: true,
+      }}
+    />
   </Stack.Navigator>
 );
 
