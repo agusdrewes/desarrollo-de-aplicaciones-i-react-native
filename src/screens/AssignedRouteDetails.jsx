@@ -3,7 +3,7 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
+  Pressable,
   ActivityIndicator,
   StyleSheet,
   Alert,
@@ -18,7 +18,7 @@ const AssignedRouteDetails = ({ route, navigation }) => {
   const [assignedRoute, setAssignedRoute] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { getAssignedRouteById, getAssignedRouteCancel } = useRoutesService();
+  const { getAssignedRouteById, cancelAssignedRoute } = useRoutesService();
 
   const fetchAssignedRouteDetails = async () => {
     try {
@@ -38,8 +38,8 @@ const AssignedRouteDetails = ({ route, navigation }) => {
 
   const handleCancel = async (id) => {
   try {
-    await getAssignedRouteCancel(id);
-    navigation.goBack(); // ⚠️ reemplazá con el nombre real de tu screen
+    await cancelAssignedRoute(id);
+    navigation.goBack(); 
   } catch (error) {
     Alert.alert('Error', 'No se pudo cancelar la entrega.');
   }
@@ -105,9 +105,9 @@ const AssignedRouteDetails = ({ route, navigation }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
           <Text style={styles.error}>{error}</Text>
-          <TouchableOpacity style={styles.button} onPress={fetchAssignedRouteDetails}>
+          <Pressable style={styles.button} onPress={fetchAssignedRouteDetails}>
             <Text style={styles.buttonText}>Reintentar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </SafeAreaView>
     );
@@ -166,7 +166,7 @@ const AssignedRouteDetails = ({ route, navigation }) => {
 
     <View style={styles.buttonContainer}>
           {assignedRoute?.status?.toLowerCase?.() !== 'completed' && (
-            <TouchableOpacity 
+            <Pressable 
               style={[styles.button, styles.confirmButton]} 
               onPress={() => navigation.navigate('ConfirmDelivery', { 
                 deliveryId: assignedRoute.id, 
@@ -174,24 +174,37 @@ const AssignedRouteDetails = ({ route, navigation }) => {
               })}
             >
               <Text style={styles.buttonText}>Confirmar Entrega</Text>
-            </TouchableOpacity>
+            </Pressable>
             
             
           )}
           {assignedRoute?.status?.toLowerCase?.() !== 'completed' && (
-            <TouchableOpacity 
+            <Pressable 
               style={[styles.button, styles.confirmButton]} 
               onPress={() => handleCancel(assignedRoute.id)}
             >
               <Text style={styles.buttonText}>Cancelar Entrega</Text>
-            </TouchableOpacity>
+            </Pressable>
             
             
           )}
           
-          <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+          <Pressable style={styles.button} onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ 
+                name: 'MainTabs',
+                params: {
+                  screen: 'AssignedRoutes',
+                  params: {
+                    screen: 'AssignedRoutesList'
+                  }
+                }
+              }],
+            });
+          }}>
             <Text style={styles.buttonText}>Volver</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </ScrollView>
     </SafeAreaView>

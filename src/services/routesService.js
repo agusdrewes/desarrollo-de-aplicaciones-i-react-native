@@ -36,29 +36,53 @@ export const useRoutesService = () => {
     }
   };
 
-  const getAssignedRouteCancel = async id => {
+   const getUnassignedRouteById = async id => {
+    try {
+      return await axiosInstance.get(`/routes/unassigned/${id}`);
+    } catch (error) {
+      console.error(
+        'Error al obtener la ruta por id:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
+
+  const cancelAssignedRoute = async id => {
     try {
       return await axiosInstance.post(`/routes/${id}/cancel`);
     } catch (error) {
       console.error(
-        'Error al obtener la ruta asignada por id:',
+        'Error al cancelar la ruta asignada:',
         error.response?.data || error.message
       );
       throw error;
     }
   };
 
-  const getAssignedRouteDelivered = async (id,confirmationCode) => {
+  const assignRoute = async (id,confirmationCode) => {
+    try {
+      return await axiosInstance.post(`/routes/${id}/assign/${confirmationCode}`);
+    } catch (error) {
+      console.error(
+        'Error al asignar la ruta:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
+
+  const deliverAsignedRoute = async (id,confirmationCode) => {
     try {
       return await axiosInstance.post(`/routes/${id}/deliver/${confirmationCode}`);
     } catch (error) {
       console.error(
-        'Error al obtener la ruta asignada por id:',
+        'Error al asignar la ruta:',
         error.response?.data || error.message
       );
       throw error;
     }
   };
 
-  return { getPendingRoutes, getAssignedRoutes, getAssignedRouteById, getAssignedRouteCancel,getAssignedRouteDelivered };
+  return { getPendingRoutes, getAssignedRoutes, getAssignedRouteById, assignRoute,cancelAssignedRoute,getUnassignedRouteById,deliverAsignedRoute };
 };

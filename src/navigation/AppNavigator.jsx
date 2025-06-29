@@ -10,7 +10,7 @@ import { Platform } from 'react-native';
 import AssignedRoutes from '../screens/AssignedRoutes';
 import QRScanner from '../screens/QRScanner';
 import ConfirmDelivery from '../screens/ConfirmDelivery';
-import { TouchableOpacity } from 'react-native';
+import { Pressable } from 'react-native';
 
 
 
@@ -114,16 +114,16 @@ const Tabs = () => (
 
       <Tab.Screen
         name="QRButton"
-        component={() => null} // No renderiza ningún componente
+        component={() => null} 
         options={({ navigation }) => ({
           tabBarLabel: 'Escanear',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="qr-code-scanner" size={size} color={color} />
           ),
           tabBarButton: (props) => (
-            <TouchableOpacity
+            <Pressable
               {...props}
-              onPress={() => navigation.navigate('QRScanner')} // Navega al stack
+              onPress={() => navigation.navigate('QRScanner')} 
               style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
             />
           ),

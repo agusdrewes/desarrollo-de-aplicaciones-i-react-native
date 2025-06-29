@@ -6,17 +6,15 @@ import OtpForm from '../components/otp/OtpForm';
 export default function ConfirmDelivery({ navigation, route }) {
   const { deliveryId, deliveryDetails } = route.params;
   const { otp, setOtp, loading, handleVerify } = useOtpVerification();
-  const { getAssignedRouteDelivered } = useRoutesService();
+  const { deliverAsignedRoute } = useRoutesService();
 
   const handleConfirmDelivery = () => {
     handleVerify({
-      verificationFunction: (otpCode) => getAssignedRouteDelivered(deliveryId, otpCode),
+      verificationFunction: (otpCode) => deliverAsignedRoute(deliveryId, otpCode),
       successMessage: 'Entrega confirmada exitosamente. El estado ha sido actualizado.',
       errorMessage: 'Error al confirmar la entrega. Verifica el código e inténtalo de nuevo.',
       onSuccess: () => {
-        navigation.navigate('AssignedRouteDetails', { 
-          delivery: { ...deliveryDetails, estado: 'Entregado' } 
-        });
+        navigation.navigate('AssignedRouteDetails', { id: deliveryId });  
       },
       onCancel: () => navigation.goBack(),
     });

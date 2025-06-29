@@ -5,7 +5,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
   Alert,
   SafeAreaView,
@@ -79,7 +79,7 @@ const AssignedRoutes = ({ navigation }) => {
   };
 
   const renderAssignedRouteItem = ({ item }) => (
-    <TouchableOpacity
+    <Pressable
       style={styles.assignedRoutesItem}
       onPress={() => navigation.navigate('AssignedRouteDetails', { id: item.id })}
     >
@@ -92,7 +92,7 @@ const AssignedRoutes = ({ navigation }) => {
       <Text style={styles.text}>Cliente: {item.clientName}</Text>
       <Text style={styles.text}>Fecha: {formatDate(item.date)}</Text>
       <Text style={styles.text}>Dirección: {item.address}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   if (loading && !refreshing) {
@@ -110,9 +110,9 @@ const AssignedRoutes = ({ navigation }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
           <Text style={styles.errorMessage}>{errorMessage}</Text>
-          <TouchableOpacity style={styles.button} onPress={fetchAssignedRoutes}>
+          <Pressable style={styles.button} onPress={fetchAssignedRoutes}>
             <Text style={styles.buttonText}>Reintentar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </SafeAreaView>
     );

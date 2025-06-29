@@ -7,7 +7,7 @@ export default function PendingRouteDetails() {
   const { id, warehouse, destinationNeighborhood } = route.params;
   
   const handleScanQR = () => {
-    navigation.navigate('QRScanner');
+    navigation.navigate('QRScanner', {id: id});
   };
 
   return (

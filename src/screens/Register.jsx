@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuthService } from '../services/authService';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, Pressable, Alert } from 'react-native';
 import styles from '../styles/RegisterStyle';
 import { useNavigation } from '@react-navigation/native';
 import isEmailValid from '../utils/isEmailValid'
@@ -111,14 +111,14 @@ export default function Register() {
       {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity
+        <Pressable
           style={[styles.button, styles.cancelButton]}
           onPress={() => navigation.goBack()}
         >
           <Text style={styles.buttonText}>Cancelar</Text>
-        </TouchableOpacity>
+        </Pressable>
 
-        <TouchableOpacity
+        <Pressable
           style={[styles.button, isFormIncomplete && styles.disabledButton]}
           onPress={handleRegister}
           disabled={isFormIncomplete}
@@ -126,7 +126,7 @@ export default function Register() {
           <Text style={[styles.buttonText, isFormIncomplete && styles.disabledText]}>
             Registrarse
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
