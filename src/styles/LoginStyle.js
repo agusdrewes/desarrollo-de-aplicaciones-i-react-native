@@ -8,16 +8,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDF5F5',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 32,
   },
   input: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingVertical: 8,
     marginBottom: 12,
+    backgroundColor: 'transparent',
   },
   errorText: {
     color: 'red',
@@ -25,23 +21,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   loginButton: {
-    backgroundColor: '#6200EE',
-    paddingVertical: 12,
-    borderRadius: 24,
-    alignItems: 'center',
     marginTop: 16,
-  },
-  loginButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    borderRadius: 24,
   },
   disabledButton: {
-    backgroundColor: '#ccc',
-  },
-  linkText: {
-    color: '#007AFF',
-    textAlign: 'center',
-    marginTop: 12,
+    opacity: 0.5,
   },
 });
 

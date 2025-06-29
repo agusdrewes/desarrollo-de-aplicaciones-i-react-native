@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
-  TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -11,8 +8,13 @@ import {
   Keyboard
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Snackbar } from 'react-native-paper';
-import isEmailValid from '../utils/isEmailValid'
+import {
+  Text,
+  TextInput,
+  Button,
+  Snackbar,
+} from 'react-native-paper';
+import isEmailValid from '../utils/isEmailValid';
 import { useAuthService } from '../services/authService';
 
 export default function ForgotPassword() {
@@ -67,17 +69,16 @@ export default function ForgotPassword() {
     Keyboard.dismiss();
     try {
       await resetPassword(email, password, confirmation);
-
       setSnackbarMsg(
         'Si el email existe en nuestro sistema te enviaremos un email para recuperar tu clave'
       );
       setSnackbarError(false);
       setVisible(true);
-      navigation.navigate('ConfirmPassword')
-    } catch (error) {
+      navigation.navigate('ConfirmPassword');
+    } catch (err) {
       let msg = err?.response?.data?.message;
       if (Array.isArray(msg)) {
-        msg = msg.join('\n')
+        msg = msg.join('\n');
       } else if (typeof msg !== 'string') {
         msg = 'Error al recuperar la clave';
       }
@@ -97,26 +98,28 @@ export default function ForgotPassword() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.container}>
-          <Text style={styles.title}>Recuperar contraseña</Text>
+          <Text variant="headlineMedium" style={styles.title}>
+            Recuperar contraseña
+          </Text>
 
           <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
+            label="Email"
+            mode="flat"
             value={email}
             onChangeText={(text) => {
               setEmail(text);
               validateEmail(text);
             }}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            error={!!emailError}
+            style={styles.input}
           />
-          {emailError ? (
-            <Text style={styles.errorText}>{emailError}</Text>
-          ) : null}
+          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
           <TextInput
-            style={styles.input}
-            placeholder="Nueva clave"
+            label="Nueva clave"
+            mode="flat"
             secureTextEntry
             value={password}
             onChangeText={(text) => {
@@ -124,47 +127,51 @@ export default function ForgotPassword() {
               validatePassword(text);
               if (confirmation) validateConfirmation(confirmation);
             }}
+            error={!!passwordError}
+            style={styles.input}
           />
-          {passwordError ? (
-            <Text style={styles.errorText}>{passwordError}</Text>
-          ) : null}
+          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
           <TextInput
-            style={styles.input}
-            placeholder="Confirmar nueva clave"
+            label="Confirmar nueva clave"
+            mode="flat"
             secureTextEntry
             value={confirmation}
             onChangeText={(text) => {
               setConfirmation(text);
               validateConfirmation(text);
             }}
+            error={!!confirmationError}
+            style={styles.input}
           />
           {confirmationError ? (
             <Text style={styles.errorText}>{confirmationError}</Text>
           ) : null}
 
-          <TouchableOpacity
-            style={[
-              styles.loginButton,
-              !isFormValid && styles.disabledButton,
-            ]}
+          <Button
+            mode="contained"
             onPress={handleResetPassword}
             disabled={!isFormValid}
+            style={[styles.button, !isFormValid && styles.disabledButton]}
           >
-            <Text style={styles.forgotPasswordButtonText}>Recuperar clave</Text>
-          </TouchableOpacity>
+            Recuperar clave
+          </Button>
 
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.linkText}>Cancelar</Text>
-          </TouchableOpacity>
+          <Button mode="text" onPress={() => navigation.navigate('Login')}>
+            Cancelar
+          </Button>
         </View>
+
         <Snackbar
           visible={visible}
-          style={snackbarError ? { backgroundColor: '#c0392b' } : { backgroundColor: '#27ae60' }}
+          onDismiss={() => setVisible(false)}
+          duration={4000}
+          style={{
+            backgroundColor: snackbarError ? '#c0392b' : '#27ae60',
+          }}
         >
           {snackbarMsg}
         </Snackbar>
-
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -178,39 +185,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDF5F5',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 32,
   },
   input: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingVertical: 8,
     marginBottom: 12,
+    backgroundColor: 'transparent',
   },
   errorText: {
     color: 'red',
     fontSize: 12,
     marginBottom: 8,
   },
-  loginButton: {
-    backgroundColor: '#6200EE',
-    paddingVertical: 12,
-    borderRadius: 24,
-    alignItems: 'center',
+  button: {
     marginTop: 16,
-  },
-  forgotPasswordButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    borderRadius: 24,
   },
   disabledButton: {
-    backgroundColor: '#ccc',
-  },
-  linkText: {
-    color: '#007AFF',
-    textAlign: 'center',
-    marginTop: 12,
+    opacity: 0.5,
   },
 });

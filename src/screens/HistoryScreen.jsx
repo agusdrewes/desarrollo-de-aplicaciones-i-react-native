@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
 
 export default function HistoryScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Pantalla Historial (History)</Text>
+      <Text variant="titleLarge" style={styles.text}>
+        Pantalla Historial (History)
+      </Text>
     </View>
   );
 }
@@ -16,7 +19,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontSize: 20,
     fontWeight: 'bold',
   },
 });

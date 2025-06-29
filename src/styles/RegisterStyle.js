@@ -7,25 +7,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDF5F5',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 24,
   },
-  label: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginTop: 12,
-  },
   input: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingVertical: 8,
-    marginBottom: 8,
+    marginBottom: 12,
+    backgroundColor: 'transparent',
   },
   errorText: {
     color: 'red',
     fontSize: 12,
+    marginBottom: 4,
   },
   buttonRow: {
     flexDirection: 'row',
@@ -34,25 +26,13 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: '#6200EE',
-    paddingVertical: 12,
-    borderRadius: 24,
-    alignItems: 'center',
     marginHorizontal: 4,
   },
   cancelButton: {
-    backgroundColor: '#BB86FC',
+    borderColor: '#6200EE',
   },
   disabledButton: {
     opacity: 0.5,
-    backgroundColor: '#ccc',
-  },
-  disabledText: {
-    color: '#999',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
   },
 });
 

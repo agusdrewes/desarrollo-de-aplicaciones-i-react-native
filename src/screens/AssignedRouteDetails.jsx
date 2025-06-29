@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react';
 import {
   View,
-  Text,
   ScrollView,
-  TouchableOpacity,
-  ActivityIndicator,
   StyleSheet,
   Alert,
   SafeAreaView,
   StatusBar,
   Platform,
 } from 'react-native';
+import { Text, Button, ActivityIndicator } from 'react-native-paper';
 import { useRoutesService } from '../services/routesService';
 
 const AssignedRouteDetails = ({ route, navigation }) => {
@@ -94,7 +92,7 @@ const AssignedRouteDetails = ({ route, navigation }) => {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator animating={true} size="large" />
         </View>
       </SafeAreaView>
     );
@@ -105,9 +103,9 @@ const AssignedRouteDetails = ({ route, navigation }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
           <Text style={styles.error}>{error}</Text>
-          <TouchableOpacity style={styles.button} onPress={fetchAssignedRouteDetails}>
-            <Text style={styles.buttonText}>Reintentar</Text>
-          </TouchableOpacity>
+          <Button mode="contained" onPress={fetchAssignedRouteDetails} style={styles.button}>
+            Reintentar
+          </Button>
         </View>
       </SafeAreaView>
     );
@@ -139,59 +137,60 @@ const AssignedRouteDetails = ({ route, navigation }) => {
           <Text style={styles.value}>{formatDate(assignedRoute.delivery.assignedAt)}</Text>
         </View>
 
-        <>
-          {assignedRoute.status.toLowerCase() === 'completed' && (
-            <>
-              <View style={styles.infoSection}>
-                <Text style={styles.label}>Fecha de Entrega:</Text>
-                <Text style={styles.value}>{formatDate(assignedRoute.delivery.deliveredAt)}</Text>
-              </View>
-              <View style={styles.infoSection}>
-                <Text style={styles.label}>Tiempo de Entrega:</Text>
-                <Text style={styles.value}>
-                  {getTimeDifference(
-                    assignedRoute.delivery.assignedAt,
-                    assignedRoute.delivery.deliveredAt
-                  )}
-                </Text>
-              </View>
-            </>
-          )}
-        </>
+        {assignedRoute.status.toLowerCase() === 'completed' && (
+          <>
+            <View style={styles.infoSection}>
+              <Text style={styles.label}>Fecha de Entrega:</Text>
+              <Text style={styles.value}>
+                {formatDate(assignedRoute.delivery.deliveredAt)}
+              </Text>
+            </View>
+            <View style={styles.infoSection}>
+              <Text style={styles.label}>Tiempo de Entrega:</Text>
+              <Text style={styles.value}>
+                {getTimeDifference(
+                  assignedRoute.delivery.assignedAt,
+                  assignedRoute.delivery.deliveredAt
+                )}
+              </Text>
+            </View>
+          </>
+        )}
 
         <View style={styles.infoSection}>
           <Text style={styles.label}>Dirección:</Text>
           <Text style={styles.value}>{assignedRoute.destination.address}</Text>
         </View>
 
-    <View style={styles.buttonContainer}>
+        <View style={styles.buttonContainer}>
           {assignedRoute?.status?.toLowerCase?.() !== 'completed' && (
-            <TouchableOpacity 
-              style={[styles.button, styles.confirmButton]} 
-              onPress={() => navigation.navigate('ConfirmDelivery', { 
-                deliveryId: assignedRoute.id, 
-                deliveryDetails: assignedRoute 
-              })}
-            >
-              <Text style={styles.buttonText}>Confirmar Entrega</Text>
-            </TouchableOpacity>
-            
-            
+            <>
+              <Button
+                mode="contained"
+                style={styles.button}
+                onPress={() =>
+                  navigation.navigate('ConfirmDelivery', {
+                    deliveryId: assignedRoute.id,
+                    deliveryDetails: assignedRoute,
+                  })
+                }
+              >
+                Confirmar Entrega
+              </Button>
+
+              <Button
+                mode="outlined"
+                style={styles.button}
+                onPress={() => handleCancel(assignedRoute.id)}
+              >
+                Cancelar Entrega
+              </Button>
+            </>
           )}
-          {assignedRoute?.status?.toLowerCase?.() !== 'completed' && (
-            <TouchableOpacity 
-              style={[styles.button, styles.confirmButton]} 
-              onPress={() => handleCancel(assignedRoute.id)}
-            >
-              <Text style={styles.buttonText}>Cancelar Entrega</Text>
-            </TouchableOpacity>
-            
-            
-          )}
-          
-          <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-            <Text style={styles.buttonText}>Volver</Text>
-          </TouchableOpacity>
+
+          <Button mode="text" onPress={() => navigation.goBack()} style={styles.button}>
+            Volver
+          </Button>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -202,20 +201,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    paddingHorizontal: 15,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0,
-    paddingBottom: 10,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 10,
   },
   centered: {
     flex: 1,
@@ -245,16 +230,12 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
   },
-  button: {
-    backgroundColor: '#0000ff',
-    padding: 10,
-    borderRadius: 5,
+  buttonContainer: {
     marginTop: 20,
-    alignItems: 'center',
+    gap: 12,
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  button: {
+    borderRadius: 6,
   },
 });
 

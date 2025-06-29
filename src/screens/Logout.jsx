@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text, Button } from 'react-native-paper';
 import { AuthContext } from '../context/AuthContext';
 
 export default function Logout() {
@@ -8,7 +9,9 @@ export default function Logout() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>¿Seguro que querés cerrar sesión?</Text>
-      <Button title="Cerrar sesión" onPress={logout} />
+      <Button mode="contained" onPress={logout} style={styles.button}>
+        Cerrar sesión
+      </Button>
     </View>
   );
 }
@@ -23,5 +26,8 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     marginBottom: 20,
+  },
+  button: {
+    borderRadius: 8,
   },
 });

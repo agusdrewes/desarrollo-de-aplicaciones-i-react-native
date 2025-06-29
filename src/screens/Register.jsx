@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useAuthService } from '../services/authService';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import styles from '../styles/RegisterStyle';
+import { View, Alert } from 'react-native';
+import { Text, TextInput, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import isEmailValid from '../utils/isEmailValid'
+import styles from '../styles/RegisterStyle';
+import { useAuthService } from '../services/authService';
+import isEmailValid from '../utils/isEmailValid';
 
 export default function Register() {
   const navigation = useNavigation();
@@ -14,32 +15,31 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errors, setErrors] = useState({});
 
   const isFormIncomplete =
-    nombre === '' || apellido === '' || email === '' || password === '' || confirmPassword === '';
-
-  const [errors, setErrors] = useState({});
+    !nombre || !apellido || !email || !password || !confirmPassword;
 
   const validateFields = () => {
     const newErrors = {};
 
-        if (!nombre.trim()) newErrors.nombre = 'El nombre no puede estar vacío';
-        if (!apellido.trim()) newErrors.apellido = 'El apellido no puede estar vacío';
-        if (!email.trim()) {
-            newErrors.email = 'El email no puede estar vacío';
-        } else if (!isEmailValid(email)) {
-            newErrors.email = 'Formato de email inválido';
-        }
-        if (!password) {
-            newErrors.password = 'La contraseña no puede estar vacía';
-        } else if (password.length < 6) {
-            newErrors.password = 'Debe tener al menos 6 caracteres';
-        }
-        if (!confirmPassword) {
-            newErrors.confirmPassword = 'Confirma tu contraseña';
-        } else if (password !== confirmPassword) {
-            newErrors.confirmPassword = 'Las contraseñas no coinciden';
-        }
+    if (!nombre.trim()) newErrors.nombre = 'El nombre no puede estar vacío';
+    if (!apellido.trim()) newErrors.apellido = 'El apellido no puede estar vacío';
+    if (!email.trim()) {
+      newErrors.email = 'El email no puede estar vacío';
+    } else if (!isEmailValid(email)) {
+      newErrors.email = 'Formato de email inválido';
+    }
+    if (!password) {
+      newErrors.password = 'La contraseña no puede estar vacía';
+    } else if (password.length < 6) {
+      newErrors.password = 'Debe tener al menos 6 caracteres';
+    }
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Confirma tu contraseña';
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'Las contraseñas no coinciden';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -59,74 +59,81 @@ export default function Register() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
+      <Text variant="headlineMedium" style={styles.title}>Register</Text>
 
-      <Text style={styles.label}>Nombre</Text>
       <TextInput
-        style={styles.input}
-        placeholder="Nombre"
+        label="Nombre"
         value={nombre}
         onChangeText={setNombre}
+        mode="flat"
+        error={!!errors.nombre}
+        style={styles.input}
       />
       {errors.nombre && <Text style={styles.errorText}>{errors.nombre}</Text>}
 
-      <Text style={styles.label}>Apellido</Text>
       <TextInput
-        style={styles.input}
-        placeholder="Apellido"
+        label="Apellido"
         value={apellido}
         onChangeText={setApellido}
+        mode="flat"
+        error={!!errors.apellido}
+        style={styles.input}
       />
       {errors.apellido && <Text style={styles.errorText}>{errors.apellido}</Text>}
 
-      <Text style={styles.label}>Email</Text>
       <TextInput
-        style={styles.input}
-        placeholder="Email"
+        label="Email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        mode="flat"
+        error={!!errors.email}
+        style={styles.input}
       />
       {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-      <Text style={styles.label}>Contraseña</Text>
       <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
+        label="Contraseña"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        mode="flat"
+        error={!!errors.password}
+        style={styles.input}
       />
       {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
-      <Text style={styles.label}>Confirmar contraseña</Text>
       <TextInput
-        style={styles.input}
-        placeholder="Confirmar contraseña"
+        label="Confirmar contraseña"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
+        mode="flat"
+        error={!!errors.confirmPassword}
+        style={styles.input}
       />
-      {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
+      {errors.confirmPassword && (
+        <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+      )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity
-          style={[styles.button, styles.cancelButton]}
+        <Button
+          mode="outlined"
           onPress={() => navigation.goBack()}
+          style={[styles.button, styles.cancelButton]}
         >
-          <Text style={styles.buttonText}>Cancelar</Text>
-        </TouchableOpacity>
+          Cancelar
+        </Button>
 
-        <TouchableOpacity
-          style={[styles.button, isFormIncomplete && styles.disabledButton]}
+        <Button
+          mode="contained"
           onPress={handleRegister}
           disabled={isFormIncomplete}
+          style={[styles.button, isFormIncomplete && styles.disabledButton]}
         >
-          <Text style={[styles.buttonText, isFormIncomplete && styles.disabledText]}>
-            Registrarse
-          </Text>
-        </TouchableOpacity>
+          Registrarse
+        </Button>
       </View>
     </View>
   );

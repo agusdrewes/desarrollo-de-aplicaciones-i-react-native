@@ -1,24 +1,26 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text, Button } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 export default function PendingRouteDetails() {
   const navigation = useNavigation();
   const route = useRoute();
   const { id, warehouse, destinationNeighborhood } = route.params;
-  
+
   const handleScanQR = () => {
     navigation.navigate('QRScanner');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Detalle de Ruta</Text>
+      <Text variant="headlineSmall" style={styles.title}>Detalle de Ruta</Text>
+
       <Text style={styles.label}>ID del Paquete:</Text>
       <Text style={styles.value}>{id}</Text>
 
       <Text style={styles.label}>Depósito:</Text>
       <Text style={styles.value}>{warehouse.name}</Text>
-      <Text style={styles.label}>Seccion:</Text>
+      <Text style={styles.label}>Sección:</Text>
       <Text style={styles.value}>{warehouse.section}</Text>
       <Text style={styles.label}>Estante:</Text>
       <Text style={styles.value}>{warehouse.shelf}</Text>
@@ -26,14 +28,21 @@ export default function PendingRouteDetails() {
       <Text style={styles.label}>Barrio de Destino:</Text>
       <Text style={styles.value}>{destinationNeighborhood}</Text>
 
-      <Button 
-          title="Escanear QR" 
-          onPress={handleScanQR}
-          color="#2196F3"
-        />
-        <View style={styles.buttonSpacer} />
+      <Button
+        mode="contained"
+        onPress={handleScanQR}
+        style={styles.button}
+      >
+        Escanear QR
+      </Button>
 
-      <Button title="Volver" onPress={() => navigation.goBack()} />
+      <Button
+        mode="outlined"
+        onPress={() => navigation.goBack()}
+        style={styles.button}
+      >
+        Volver
+      </Button>
     </View>
   );
 }
@@ -45,9 +54,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
     marginBottom: 24,
+    textAlign: 'center',
   },
   label: {
     fontSize: 16,
@@ -57,5 +65,9 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     color: '#555',
+  },
+  button: {
+    marginTop: 24,
+    borderRadius: 8,
   },
 });

@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
-  Text,
   FlatList,
-  ActivityIndicator,
   RefreshControl,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
   Alert,
   SafeAreaView,
-  StatusBar,
-  Platform,
 } from 'react-native';
+import { Text, Button, ActivityIndicator } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRoutesService } from '../services/routesService';
 
@@ -79,7 +76,7 @@ const AssignedRoutes = ({ navigation }) => {
   };
 
   const renderAssignedRouteItem = ({ item }) => (
-    <TouchableOpacity
+    <Pressable
       style={styles.assignedRoutesItem}
       onPress={() => navigation.navigate('AssignedRouteDetails', { id: item.id })}
     >
@@ -92,14 +89,14 @@ const AssignedRoutes = ({ navigation }) => {
       <Text style={styles.text}>Cliente: {item.clientName}</Text>
       <Text style={styles.text}>Fecha: {formatDate(item.date)}</Text>
       <Text style={styles.text}>Dirección: {item.address}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   if (loading && !refreshing) {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator animating={true} size="large" />
         </View>
       </SafeAreaView>
     );
@@ -110,9 +107,9 @@ const AssignedRoutes = ({ navigation }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
           <Text style={styles.errorMessage}>{errorMessage}</Text>
-          <TouchableOpacity style={styles.button} onPress={fetchAssignedRoutes}>
-            <Text style={styles.buttonText}>Reintentar</Text>
-          </TouchableOpacity>
+            <Button mode="contained" onPress={fetchAssignedRoutes} style={styles.button}>
+              Reintentar
+            </Button>
         </View>
       </SafeAreaView>
     );
@@ -136,20 +133,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    paddingHorizontal: 15,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0,
-    paddingBottom: 10,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 10,
   },
   listContent: {
     padding: 10,
@@ -185,13 +168,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#0000ff',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
+    marginTop: 8,
+    borderRadius: 6,
   },
   emptyText: {
     textAlign: 'center',
