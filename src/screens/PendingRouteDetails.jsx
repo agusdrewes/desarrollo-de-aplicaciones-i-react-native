@@ -5,6 +5,10 @@ export default function PendingRouteDetails() {
   const navigation = useNavigation();
   const route = useRoute();
   const { id, warehouse, destinationNeighborhood } = route.params;
+  
+  const handleScanQR = () => {
+    navigation.navigate('QRScanner');
+  };
 
   return (
     <View style={styles.container}>
@@ -21,6 +25,13 @@ export default function PendingRouteDetails() {
 
       <Text style={styles.label}>Barrio de Destino:</Text>
       <Text style={styles.value}>{destinationNeighborhood}</Text>
+
+      <Button 
+          title="Escanear QR" 
+          onPress={handleScanQR}
+          color="#2196F3"
+        />
+        <View style={styles.buttonSpacer} />
 
       <Button title="Volver" onPress={() => navigation.goBack()} />
     </View>

@@ -8,6 +8,8 @@ import Logout from '../screens/Logout';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
 import AssignedRoutes from '../screens/AssignedRoutes';
+import QRScanner from '../screens/QRScanner';
+import ConfirmDelivery from '../screens/ConfirmDelivery';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,6 +26,14 @@ const PendingRoutesStack = () => (
       component={PendingRouteDetails}
       options={{ title: 'Detalle de Ruta' }}
     />
+    <Stack.Screen
+  name="QRScanner"
+  component={QRScanner}
+  options={{
+    title: 'Escanear QR',
+    unmountOnBlur: true, 
+  }}
+/>
   </Stack.Navigator>
 );
 
@@ -50,6 +60,20 @@ const AssignedRoutesStack = () => (
         },
       }}
     />
+    <Stack.Screen
+      name="ConfirmDelivery"
+      component={ConfirmDelivery}
+      options={{ 
+        title: 'Confirmar Entrega',
+        headerStyle: {
+          backgroundColor: '#f5f5f5',
+        },
+        headerTintColor: '#333',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    />
   </Stack.Navigator>
 );
 
@@ -84,6 +108,16 @@ const Tabs = () => (
           ),
         }}
       />
+      <Tab.Screen
+      name="QR"
+      component={QRScanner}
+      options={{
+        headerShown: false,
+        tabBarLabel: 'Escanear QR',
+        tabBarIcon: ({ color, size }) => <MaterialIcons name="qr-code-scanner" size={size} color={color} />,
+        unmountOnBlur: true, 
+      }}
+    />
       <Tab.Screen
         name="AssignedRoutes"
         component={AssignedRoutesStack}

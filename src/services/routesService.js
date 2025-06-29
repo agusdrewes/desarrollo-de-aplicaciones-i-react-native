@@ -36,5 +36,29 @@ export const useRoutesService = () => {
     }
   };
 
-  return { getPendingRoutes, getAssignedRoutes, getAssignedRouteById };
+  const getAssignedRouteCancel = async id => {
+    try {
+      return await axiosInstance.post(`/routes/${id}/cancel`);
+    } catch (error) {
+      console.error(
+        'Error al obtener la ruta asignada por id:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
+
+  const getAssignedRouteDelivered = async (id,confirmationCode) => {
+    try {
+      return await axiosInstance.post(`/routes/${id}/deliver/${confirmationCode}`);
+    } catch (error) {
+      console.error(
+        'Error al obtener la ruta asignada por id:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
+
+  return { getPendingRoutes, getAssignedRoutes, getAssignedRouteById, getAssignedRouteCancel,getAssignedRouteDelivered };
 };

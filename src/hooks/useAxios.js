@@ -22,11 +22,11 @@ export const useAxios = () => {
 
   const getBaseUrl = () => {
     if (Platform.OS === 'android') {
-      return 'http://10.0.2.2:3000';
+      return 'http://192.168.1.52:3000';
     } else if (Platform.OS === 'ios') {
-      return 'http://localhost:3000';
+      return 'http://192.168.1.52:3000';
     } else {
-      return 'http://localhost:3000';
+      return 'http://192.168.1.52:3000';
     }
   };
 
