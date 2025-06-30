@@ -12,6 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import { useRoutesService } from '../services/routesService';
+import openGoogleMaps from '../utils/openGoogleMaps';
 
 const AssignedRouteDetails = ({ route, navigation }) => {
   const { id } = route.params;
@@ -53,7 +54,6 @@ const AssignedRouteDetails = ({ route, navigation }) => {
     return new Date(dateString).toLocaleDateString('es-AR');
   };
 
-  // Get the days and hours between two dates
   const getTimeDifference = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -105,8 +105,16 @@ const AssignedRouteDetails = ({ route, navigation }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
           <Text style={styles.error}>{error}</Text>
-          <Pressable style={styles.button} onPress={fetchAssignedRouteDetails}>
-            <Text style={styles.buttonText}>Reintentar</Text>
+          <Pressable
+            style={({ pressed }) => [
+              styles.button,
+              styles.retryButton,
+              pressed && styles.buttonPressed,
+            ]}
+            android_ripple={{ color: '#dee2e6' }}
+            onPress={fetchAssignedRouteDetails}
+          >
+            <Text style={styles.buttonText}>🔁 Reintentar</Text>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -139,25 +147,23 @@ const AssignedRouteDetails = ({ route, navigation }) => {
           <Text style={styles.value}>{formatDate(assignedRoute.delivery.assignedAt)}</Text>
         </View>
 
-        <>
-          {assignedRoute.status.toLowerCase() === 'completed' && (
-            <>
-              <View style={styles.infoSection}>
-                <Text style={styles.label}>Fecha de Entrega:</Text>
-                <Text style={styles.value}>{formatDate(assignedRoute.delivery.deliveredAt)}</Text>
-              </View>
-              <View style={styles.infoSection}>
-                <Text style={styles.label}>Tiempo de Entrega:</Text>
-                <Text style={styles.value}>
-                  {getTimeDifference(
-                    assignedRoute.delivery.assignedAt,
-                    assignedRoute.delivery.deliveredAt
-                  )}
-                </Text>
-              </View>
-            </>
-          )}
-        </>
+        {assignedRoute.status.toLowerCase() === 'completed' && (
+          <>
+            <View style={styles.infoSection}>
+              <Text style={styles.label}>Fecha de Entrega:</Text>
+              <Text style={styles.value}>{formatDate(assignedRoute.delivery.deliveredAt)}</Text>
+            </View>
+            <View style={styles.infoSection}>
+              <Text style={styles.label}>Tiempo de Entrega:</Text>
+              <Text style={styles.value}>
+                {getTimeDifference(
+                  assignedRoute.delivery.assignedAt,
+                  assignedRoute.delivery.deliveredAt
+                )}
+              </Text>
+            </View>
+          </>
+        )}
 
         <View style={styles.infoSection}>
           <Text style={styles.label}>Dirección:</Text>
@@ -204,6 +210,18 @@ const AssignedRouteDetails = ({ route, navigation }) => {
             });
           }}>
             <Text style={styles.buttonText}>Volver</Text>
+
+
+          <Pressable
+            style={({ pressed }) => [
+              styles.button,
+              styles.mapButton,
+              pressed && styles.buttonPressed,
+            ]}
+            android_ripple={{ color: '#c3fae8' }}
+            onPress={() => openGoogleMaps(assignedRoute.destination.coordinates)}
+          >
+            <Text style={styles.buttonText}>📍 Ver en Mapa</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -215,20 +233,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    paddingHorizontal: 15,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0,
-    paddingBottom: 10,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 10,
   },
   centered: {
     flex: 1,
@@ -258,16 +262,44 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
   },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 30,
+    gap: 10,
+  },
   button: {
-    backgroundColor: '#0000ff',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
     alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  backButton: {
+    backgroundColor: '#adb5bd',
+  },
+  mapButton: {
+    backgroundColor: '#51cf66',
+  },
+  retryButton: {
+    backgroundColor: '#339af0',
+    marginTop: 10,
+    borderRadius: 25,
+    paddingHorizontal: 25,
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  buttonPressed: {
+    transform: [{ scale: 0.98 }],
+    opacity: 0.85,
   },
 });
 
