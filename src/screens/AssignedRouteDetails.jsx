@@ -170,47 +170,62 @@ const AssignedRouteDetails = ({ route, navigation }) => {
           <Text style={styles.value}>{assignedRoute.destination.address}</Text>
         </View>
 
-    <View style={styles.buttonContainer}>
-          {assignedRoute?.status?.toLowerCase?.() !== 'completed' && (
+        {assignedRoute?.status?.toLowerCase?.() !== 'completed' && (
+          <View style={styles.buttonColumn}>
             <Pressable 
-              style={[styles.button, styles.confirmButton]} 
+              style={({ pressed }) => [
+                styles.button,
+                styles.confirmButton,
+                pressed && styles.buttonPressed,
+              ]}
+              android_ripple={{ color: '#c3fae8' }}
               onPress={() => navigation.navigate('ConfirmDelivery', { 
                 deliveryId: assignedRoute.id, 
                 deliveryDetails: assignedRoute 
               })}
             >
-              <Text style={styles.buttonText}>Confirmar Entrega</Text>
+              <Text style={styles.buttonText}>✅ Confirmar Entrega</Text>
             </Pressable>
             
-            
-          )}
-          {assignedRoute?.status?.toLowerCase?.() !== 'completed' && (
             <Pressable 
-              style={[styles.button, styles.confirmButton]} 
+              style={({ pressed }) => [
+                styles.button,
+                styles.cancelButton,
+                pressed && styles.buttonPressed,
+              ]}
+              android_ripple={{ color: '#ffe3e3' }}
               onPress={() => handleCancel(assignedRoute.id)}
             >
-              <Text style={styles.buttonText}>Cancelar Entrega</Text>
+              <Text style={styles.buttonText}>❌ Cancelar Entrega</Text>
             </Pressable>
-            
-            
-          )}
-          
-          <Pressable style={styles.button} onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ 
-                name: 'MainTabs',
-                params: {
-                  screen: 'AssignedRoutes',
-                  params: {
-                    screen: 'AssignedRoutesList'
-                  }
-                }
-              }],
-            });
-          }}>
-            <Text style={styles.buttonText}>Volver</Text>
+          </View>
+        )}
 
+        <View style={styles.buttonColumnNav}>
+          <Pressable 
+            style={({ pressed }) => [
+              styles.button,
+              styles.backButton,
+              pressed && styles.buttonPressed,
+            ]}
+            android_ripple={{ color: '#dee2e6' }} 
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{ 
+                  name: 'MainTabs',
+                  params: {
+                    screen: 'AssignedRoutes',
+                    params: {
+                      screen: 'AssignedRoutesList'
+                    }
+                  }
+                }],
+              });
+            }}
+          >
+            <Text style={styles.buttonText}>⬅️ Volver</Text>
+          </Pressable>
 
           <Pressable
             style={({ pressed }) => [
@@ -244,7 +259,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   infoSection: {
-    marginBottom: 15,
+    marginBottom: 5,
     padding: 10,
     backgroundColor: '#f8f8f8',
     borderRadius: 5,
@@ -262,18 +277,18 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
   },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 30,
-    gap: 10,
+  buttonColumn: {
+    marginTop: 20,
+  },
+  buttonColumnNav: {
+    marginTop: 0,
   },
   button: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
     borderRadius: 25,
     alignItems: 'center',
+    marginBottom: 12,
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -284,7 +299,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#adb5bd',
   },
   mapButton: {
+    backgroundColor: '#339af0',
+  },
+  confirmButton: {
     backgroundColor: '#51cf66',
+  },
+  cancelButton: {
+    backgroundColor: '#ff5757',
   },
   retryButton: {
     backgroundColor: '#339af0',
