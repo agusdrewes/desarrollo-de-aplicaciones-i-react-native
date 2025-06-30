@@ -19,7 +19,7 @@ const AssignedRouteDetails = ({ route, navigation }) => {
   const [assignedRoute, setAssignedRoute] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { getAssignedRouteById } = useRoutesService();
+  const { getAssignedRouteById, cancelAssignedRoute } = useRoutesService();
 
   const fetchAssignedRouteDetails = async () => {
     try {
@@ -27,6 +27,7 @@ const AssignedRouteDetails = ({ route, navigation }) => {
       setError(null);
       const res = await getAssignedRouteById(id);
       setAssignedRoute(res.data);
+      console.log(res.data);
     } catch (error) {
       console.error('Error fetching delivery details:', error);
       setError('Error al cargar los detalles');
@@ -35,6 +36,15 @@ const AssignedRouteDetails = ({ route, navigation }) => {
       setLoading(false);
     }
   };
+
+  const handleCancel = async (id) => {
+  try {
+    await cancelAssignedRoute(id);
+    navigation.goBack(); 
+  } catch (error) {
+    Alert.alert('Error', 'No se pudo cancelar la entrega.');
+  }
+};
 
   useEffect(() => {
     fetchAssignedRouteDetails();
@@ -160,18 +170,47 @@ const AssignedRouteDetails = ({ route, navigation }) => {
           <Text style={styles.value}>{assignedRoute.destination.address}</Text>
         </View>
 
-        <View style={styles.buttonRow}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              styles.backButton,
-              pressed && styles.buttonPressed,
-            ]}
-            android_ripple={{ color: '#dee2e6' }}
-            onPress={() => navigation.goBack()}
-          >
-            <Text style={styles.buttonText}>🔙 Volver</Text>
-          </Pressable>
+    <View style={styles.buttonContainer}>
+          {assignedRoute?.status?.toLowerCase?.() !== 'completed' && (
+            <Pressable 
+              style={[styles.button, styles.confirmButton]} 
+              onPress={() => navigation.navigate('ConfirmDelivery', { 
+                deliveryId: assignedRoute.id, 
+                deliveryDetails: assignedRoute 
+              })}
+            >
+              <Text style={styles.buttonText}>Confirmar Entrega</Text>
+            </Pressable>
+            
+            
+          )}
+          {assignedRoute?.status?.toLowerCase?.() !== 'completed' && (
+            <Pressable 
+              style={[styles.button, styles.confirmButton]} 
+              onPress={() => handleCancel(assignedRoute.id)}
+            >
+              <Text style={styles.buttonText}>Cancelar Entrega</Text>
+            </Pressable>
+            
+            
+          )}
+          
+          <Pressable style={styles.button} onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ 
+                name: 'MainTabs',
+                params: {
+                  screen: 'AssignedRoutes',
+                  params: {
+                    screen: 'AssignedRoutesList'
+                  }
+                }
+              }],
+            });
+          }}>
+            <Text style={styles.buttonText}>Volver</Text>
+
 
           <Pressable
             style={({ pressed }) => [

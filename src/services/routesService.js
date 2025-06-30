@@ -36,5 +36,53 @@ export const useRoutesService = () => {
     }
   };
 
-  return { getPendingRoutes, getAssignedRoutes, getAssignedRouteById };
+   const getPendingRouteById = async id => {
+    try {
+      return await axiosInstance.get(`/routes/pending/${id}`);
+    } catch (error) {
+      console.error(
+        'Error al obtener la ruta por id:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
+
+  const cancelAssignedRoute = async id => {
+    try {
+      return await axiosInstance.post(`/routes/${id}/cancel`);
+    } catch (error) {
+      console.error(
+        'Error al cancelar la ruta asignada:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
+
+  const assignRoute = async (id,confirmationCode) => {
+    try {
+      return await axiosInstance.post(`/routes/${id}/assign/${confirmationCode}`);
+    } catch (error) {
+      console.error(
+        'Error al asignar la ruta:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
+
+  const deliverAsignedRoute = async (id,confirmationCode) => {
+    try {
+      return await axiosInstance.post(`/routes/${id}/deliver/${confirmationCode}`);
+    } catch (error) {
+      console.error(
+        'Error al asignar la ruta:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
+
+  return { getPendingRoutes, getAssignedRoutes, getAssignedRouteById, assignRoute,cancelAssignedRoute,getPendingRouteById,deliverAsignedRoute };
 };

@@ -8,6 +8,11 @@ import Logout from '../screens/Logout';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
 import AssignedRoutes from '../screens/AssignedRoutes';
+import QRScanner from '../screens/QRScanner';
+import ConfirmDelivery from '../screens/ConfirmDelivery';
+import { Pressable } from 'react-native';
+
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,6 +29,14 @@ const PendingRoutesStack = () => (
       component={PendingRouteDetails}
       options={{ title: 'Detalle de Ruta' }}
     />
+    <Stack.Screen
+  name="QRScanner"
+  component={QRScanner}
+  options={{
+    title: 'Escanear QR',
+    unmountOnBlur: true, 
+  }}
+/>
   </Stack.Navigator>
 );
 
@@ -50,6 +63,20 @@ const AssignedRoutesStack = () => (
         },
       }}
     />
+    <Stack.Screen
+      name="ConfirmDelivery"
+      component={ConfirmDelivery}
+      options={{ 
+        title: 'Confirmar Entrega',
+        headerStyle: {
+          backgroundColor: '#f5f5f5',
+        },
+        headerTintColor: '#333',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    />
   </Stack.Navigator>
 );
 
@@ -84,6 +111,26 @@ const Tabs = () => (
           ),
         }}
       />
+
+      <Tab.Screen
+        name="QRButton"
+        component={() => null} 
+        options={({ navigation }) => ({
+          tabBarLabel: 'Escanear',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="qr-code-scanner" size={size} color={color} />
+          ),
+          tabBarButton: (props) => (
+            <Pressable
+              {...props}
+              onPress={() => navigation.navigate('QRScanner')} 
+              style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
+            />
+          ),
+        })}
+      />
+
+     
       <Tab.Screen
         name="AssignedRoutes"
         component={AssignedRoutesStack}
@@ -112,6 +159,14 @@ const Tabs = () => (
 const AppNavigator = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="MainTabs" component={Tabs} />
+     <Stack.Screen
+      name="QRScanner"
+      component={QRScanner}
+      options={{
+        title: 'Escanear QR',
+        unmountOnBlur: true,
+      }}
+    />
   </Stack.Navigator>
 );
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/LoginStyle';
 import { useAuthService } from '../services/authService';
@@ -83,21 +83,21 @@ export default function Login() {
           />
           {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
-      <TouchableOpacity
+      <Pressable
         style={[styles.loginButton, !isFormValid && styles.disabledButton]}
         onPress={handleLogin}
         disabled={!isFormValid}
       >
         <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+      <Pressable onPress={() => navigation.navigate('Register')}>
         <Text style={styles.linkText}>Registrate</Text>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+      <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
         <Text style={styles.linkText}>Olvidaste tu contraseña?</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
     </ScrollView>
     </KeyboardAvoidingView>

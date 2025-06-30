@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
-import { View, FlatList, Text, TouchableOpacity, StyleSheet, RefreshControl } from 'react-native';
+import { View, FlatList, Text, Pressable, StyleSheet, RefreshControl } from 'react-native';
 import { ActivityIndicator, Snackbar } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -54,14 +54,14 @@ export default function PendingRoutes() {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.item} onPress={() => handlePressItem(item)}>
+    <Pressable style={styles.item} onPress={() => handlePressItem(item)}>
       <MaterialIcons name="local-shipping" size={24} color="#555" style={styles.icon} />
       <View>
         <Text style={styles.title}>{item.warehouse.name}</Text>
         <Text style={styles.subtitle}>{item.destinationNeighborhood}</Text>
         <Text style={styles.id}>ID: {item.id}</Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (

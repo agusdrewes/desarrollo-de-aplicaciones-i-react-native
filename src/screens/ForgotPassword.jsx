@@ -3,7 +3,7 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -143,7 +143,7 @@ export default function ForgotPassword() {
             <Text style={styles.errorText}>{confirmationError}</Text>
           ) : null}
 
-          <TouchableOpacity
+          <Pressable
             style={[
               styles.loginButton,
               !isFormValid && styles.disabledButton,
@@ -152,11 +152,11 @@ export default function ForgotPassword() {
             disabled={!isFormValid}
           >
             <Text style={styles.forgotPasswordButtonText}>Recuperar clave</Text>
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Pressable onPress={() => navigation.navigate('Login')}>
             <Text style={styles.linkText}>Cancelar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <Snackbar
           visible={visible}

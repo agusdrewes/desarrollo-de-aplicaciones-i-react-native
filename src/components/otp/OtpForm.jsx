@@ -1,19 +1,9 @@
-import { Text, Button } from 'react-native-paper';
+
+import { Text, Button, ActivityIndicator } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import OtpInput from './OtpInput';
 
-/**
- * OtpForm component for OTP verification during password reset process.
- * Displays an OTP input form and handles verification with success/error alerts.
- *
- * @param {Object} props - Component props
- * @param {string} props.titleText - The title text to display
- * @param {string} props.acceptButtonText - Text for the accept button
- * @param {string} props.cancelButtonText - Text for the cancel button
- * @param {() => void} props.onCancel - Callback function when cancel is pressed
- * @param {() => void} props.onAccept - Callback function when accept is pressed
- * @returns {JSX.Element} The OtpForm component
- */
+
 export default function OtpForm({
   titleText = 'Ingresá el código que te enviamos a tu email',
   acceptButtonText = 'Aceptar',
@@ -22,6 +12,7 @@ export default function OtpForm({
   onAccept,
   onChange,
   value = '',
+  loading = false,
 }) {
   return (
     <View style={styles.container}>
@@ -32,11 +23,17 @@ export default function OtpForm({
           mode="contained"
           onPress={onAccept}
           style={styles.button}
-          disabled={value.length !== 6}
+          disabled={value.length !== 6 || loading}
+          loading={loading}
         >
           {acceptButtonText}
         </Button>
-        <Button mode="contained" onPress={onCancel} style={styles.button}>
+        <Button 
+          mode="contained" 
+          onPress={onCancel} 
+          style={styles.button}
+          disabled={loading}
+        >
           {cancelButtonText}
         </Button>
       </View>
