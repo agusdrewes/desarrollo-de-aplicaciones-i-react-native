@@ -15,7 +15,7 @@ const QRScanner = () => {
   const route = useRoute();
   const { id } = route.params || {};
 
-  const { assignRoute, getUnassignedRouteById } = useRoutesService();
+  const { assignRoute, getPendingRouteById } = useRoutesService();
 
 
   const insets = useSafeAreaInsets();
@@ -103,7 +103,7 @@ const QRScanner = () => {
       return;
     }
 
-    const res = await getUnassignedRouteById(idQR);
+    const res = await getPendingRouteById(idQR);
 
           Alert.alert(
             'Asignar paquete',

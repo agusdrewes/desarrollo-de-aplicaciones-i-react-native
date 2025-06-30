@@ -36,9 +36,9 @@ export const useRoutesService = () => {
     }
   };
 
-   const getUnassignedRouteById = async id => {
+   const getPendingRouteById = async id => {
     try {
-      return await axiosInstance.get(`/routes/unassigned/${id}`);
+      return await axiosInstance.get(`/routes/pending/${id}`);
     } catch (error) {
       console.error(
         'Error al obtener la ruta por id:',
@@ -84,5 +84,5 @@ export const useRoutesService = () => {
     }
   };
 
-  return { getPendingRoutes, getAssignedRoutes, getAssignedRouteById, assignRoute,cancelAssignedRoute,getUnassignedRouteById,deliverAsignedRoute };
+  return { getPendingRoutes, getAssignedRoutes, getAssignedRouteById, assignRoute,cancelAssignedRoute,getPendingRouteById,deliverAsignedRoute };
 };
