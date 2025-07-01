@@ -1,49 +1,24 @@
-import { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useAuthService } from '../services/authService';
 import OtpForm from '../components/otp/OtpForm';
+import { useOtpVerification } from '../hooks/useOtpVerification';
 
 export default function ConfirmPassword({ navigation }) {
-  const [otp, setOtp] = useState('');
+  const { otp, setOtp, loading, handleVerify } = useOtpVerification();
   const { confirmPassword, getErrorMessage } = useAuthService();
 
   const navigateToLogin = () => {
     navigation.navigate('Login');
   };
 
-  const handleVerify = async () => {
-    try {
-      // Call the confirmPassword function with the OTP
-      await confirmPassword(otp);
-      console.log('Password reset confirmed');
-      Alert.alert(
-        'Confirmación exitosa',
-        'Tu contraseña ha sido restablecida correctamente. Serás redirigido al inicio.',
-        [
-          {
-            text: 'OK',
-            onPress: navigateToLogin,
-          },
-        ]
-      );
-    } catch (error) {
-      console.error('Error confirming password reset:', error);
-      Alert.alert(
-        'Confirmación incorrecta',
-        getErrorMessage(error) ||
-          'Ocurrió un error al confirmar tu contraseña. Por favor, verifica el código e inténtalo de nuevo.',
-        [
-          {
-            text: 'OK',
-          },
-          {
-            text: 'Cancelar',
-            onPress: navigateToLogin,
-            style: 'cancel',
-          },
-        ]
-      );
-    }
+  const handleVerifyPassword = () => {
+    handleVerify({
+      verificationFunction: confirmPassword,
+      successMessage: 'Tu contraseña ha sido restablecida correctamente. Serás redirigido al inicio.',
+      errorMessage: 'Ocurrió un error al confirmar tu contraseña. Por favor, verifica el código e inténtalo de nuevo.',
+      onSuccess: navigateToLogin,
+      onCancel: navigateToLogin,
+    });
   };
 
   return (
@@ -53,9 +28,10 @@ export default function ConfirmPassword({ navigation }) {
         acceptButtonText="Verificar"
         cancelButtonText="Cancelar"
         onCancel={navigateToLogin}
-        onAccept={handleVerify}
+        onAccept={handleVerifyPassword}
         onChange={setOtp}
         value={otp}
+        loading={loading}
       />
     </View>
   );
