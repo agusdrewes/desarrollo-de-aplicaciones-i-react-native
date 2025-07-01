@@ -234,7 +234,7 @@ const AssignedRouteDetails = ({ route, navigation }) => {
               pressed && styles.buttonPressed,
             ]}
             android_ripple={{ color: '#c3fae8' }}
-            onPress={() => openGoogleMaps(assignedRoute.destination.coordinates)}
+            onPress={() => openGoogleMaps(assignedRoute.destination.coordinates, assignedRoute.destination.address)}
           >
             <Text style={styles.buttonText}>📍 Ver en Mapa</Text>
           </Pressable>

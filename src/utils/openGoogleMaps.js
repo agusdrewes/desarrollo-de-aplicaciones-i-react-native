@@ -3,8 +3,9 @@ import {
   Linking,
 } from 'react-native';
 
-const openGoogleMaps = ({ lat, lng }) => {
-  const location = `${lat},${lng}`;
+const openGoogleMaps = ({ lat, lng }, address) => {
+  const location = encodeURIComponent(address);
+
   const url = Platform.select({
     ios: `maps:0,0?q=${location}`,
     android: `geo:0,0?q=${location}`
