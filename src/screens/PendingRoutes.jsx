@@ -104,6 +104,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ddd',
     alignItems: 'center',
+    backgroundColor: '#f8f8f8',
+    padding: 15,
+    marginVertical: 5,
+    borderRadius: 5,
   },
   icon: {
     marginRight: 12,
