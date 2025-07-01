@@ -18,9 +18,9 @@ import {
 import { useRoutesService } from './src/services/routesService';
 
 //Silence console logs, warnings, and errors (we need to make this configurable later)
-// console.log = () => {};
-// console.warn = () => {};
-// console.error = () => {};
+console.log = () => {};
+console.warn = () => {};
+console.error = () => {};
 
 const Stack = createNativeStackNavigator();
 

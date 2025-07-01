@@ -20,7 +20,10 @@ export const useRoutesService = () => {
       return await axiosInstance.get('/routes/assigned');
     } catch (error) {
       console.error('Error al obtener las rutas asignadas:', error.response?.data || error.message);
-      throw error;
+      if (error.response?.status !== 404) {
+        throw error;
+      }
+      return { data: [] }; // Retorna un array vacío si no hay rutas asignadas
     }
   };
 
