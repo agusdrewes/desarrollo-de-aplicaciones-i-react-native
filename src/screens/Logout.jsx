@@ -8,9 +8,11 @@ import {
   StatusBar,
 } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Logout() {
   const { logout } = useContext(AuthContext);
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.safeArea}>
