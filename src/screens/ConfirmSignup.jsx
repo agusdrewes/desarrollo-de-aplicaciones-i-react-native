@@ -13,7 +13,7 @@ export default function ConfirmSignup({ navigation }) {
 
   const handleVerifySignup = () => {
     handleVerify({
-      verificationFunction: confirmSignup(otp),
+      verificationFunction: confirmSignup,
       successMessage: 'Tu cuenta ha sido confirmada correctamente. Serás redirigido al inicio.',
       errorMessage: 'Ocurrió un error al confirmar tu cuenta. Por favor, verifica el código e inténtalo de nuevo.',
       onSuccess: navigateToLogin,
