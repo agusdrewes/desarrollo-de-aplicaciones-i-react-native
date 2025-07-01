@@ -53,28 +53,14 @@ const AssignedRoutesStack = () => (
       name="AssignedRouteDetails"
       component={AssignedRouteDetails}
       options={{
-        title: 'Detalle de Entrega',
-        headerStyle: {
-          backgroundColor: '#f5f5f5',
-        },
-        headerTintColor: '#333',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
+        title: 'Detalle de Entrega'
       }}
     />
     <Stack.Screen
       name="ConfirmDelivery"
       component={ConfirmDelivery}
       options={{ 
-        title: 'Confirmar Entrega',
-        headerStyle: {
-          backgroundColor: '#f5f5f5',
-        },
-        headerTintColor: '#333',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
+        title: 'Confirmar Entrega'
       }}
     />
   </Stack.Navigator>
